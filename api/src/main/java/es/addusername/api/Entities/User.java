@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -31,18 +32,10 @@ public class User {
 	@Column(name = "username", length = 64,nullable = false,unique = true)
 	private String username;
 	
-	//Añadir validators aqui..
-	@Column(name = "password", length = 64,nullable = false,unique = true)
-    private String password;
-	
-	//Añadir validators aqui..
-	@Column(name = "email", length = 64,nullable = false,unique = true)
-    private String email;
-	
-	//Ver como se almacena y el tipo de relacion 1:1 o si tiene sentido
-	@Column(name = "authorities")
-	private Collection<GrantedAuthority> authorities;
-
+	//Prob cambiar LAZY
+	@OneToOne(fetch = FetchType.LAZY ,cascade = CascadeType.ALL)
+	@JoinColumn(name = "post_id")
+	private Credentials creentials;
 		
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "friend_ids")
@@ -51,28 +44,23 @@ public class User {
 	/*
 	@OneToMany(mappedBy = "frame", fetch = FetchType.LAZY)
 	private List<Frame> frame_ids = new ArrayList<Frame>();
+	*/
 	
-	public User(String username, String password, String email, Collection<GrantedAuthority> authorities,
-			List<Frame> frame_ids, List<User> friends) {
-		super();
-		this.username = username;
-		this.password = password;
-		this.email = email;
-		this.authorities = authorities;
-		this.frame_ids = frame_ids;
-		this.friends = friends;
-	}*/
 	public User() {}
-	
-	//De momento, luego borrar
-	public User(String username, String password, String email, Collection<GrantedAuthority> authorities,
-			 List<User> friends) {
+
+	public User(String username, Credentials creentials, List<User> friends) {
 		super();
 		this.username = username;
-		this.password = password;
-		this.email = email;
-		this.authorities = authorities;
+		this.creentials = creentials;
 		this.friends = friends;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getUsername() {
@@ -83,30 +71,13 @@ public class User {
 		this.username = username;
 	}
 
-	public String getPassword() {
-		return password;
+	public Credentials getCreentials() {
+		return creentials;
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
+	public void setCreentials(Credentials creentials) {
+		this.creentials = creentials;
 	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public Collection<GrantedAuthority> getAuthorities() {
-		return authorities;
-	}
-
-	public void setAuthorities(Collection<GrantedAuthority> authorities) {
-		this.authorities = authorities;
-	}
-
 	public List<User> getFriends() {
 		return friends;
 	}

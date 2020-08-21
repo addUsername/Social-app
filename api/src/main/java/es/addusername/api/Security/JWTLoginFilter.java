@@ -18,6 +18,8 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import es.addusername.api.Entities.Credentials;
+
 public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
 
 	 public JWTLoginFilter(String url, AuthenticationManager authManager) {
@@ -29,11 +31,12 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
 	    public Authentication attemptAuthentication(HttpServletRequest req, HttpServletResponse res) throws IOException {
 
 	    	//leemos las credenciales enviadas por /login y de alguna maneras las autentificamos?
-	        AccountCredentials creds = new ObjectMapper().readValue(req.getInputStream(), AccountCredentials.class);
+	        Credentials creds = new ObjectMapper().readValue(req.getInputStream(), Credentials.class);
 	        
+	        //Aqui hay que poner user details
 	        return getAuthenticationManager().authenticate(
 	                new UsernamePasswordAuthenticationToken(
-	                        creds.getUsername(),
+	                        creds.getUserName(),
 	                        creds.getPassword(),
 	                        creds.getAuthorities()
 	                )
@@ -44,36 +47,4 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
 	    protected void successfulAuthentication(HttpServletRequest req, HttpServletResponse res, FilterChain chain, Authentication auth) {
 	        TokenAuthenticationHelper.addAuthentication(res, auth);
 	    }
-	   //SACAR ESTO A UNA ENTITY (NO) esto no se almacena en ningun sitio, usar y tirar
-	    //esto no es igual a la entity user xq este es el objeto que nos va a mandar vue para realizar el login
-	    
-	    static class AccountCredentials {
-	        private String username;
-	        private String password;
-	        private Collection<GrantedAuthority> authorities;
-
-	        String getUsername() {
-	            return username;
-	        }
-
-	        void setUsername(String username) {
-	            this.username = username;
-	        }
-
-	        String getPassword() {
-	            return password;
-	        }
-
-	        void setPassword(String password) {
-	            this.password = password;
-	        }
-
-	        Collection<GrantedAuthority> getAuthorities() {
-	            return authorities;
-	        }
-
-	        void setAuthorities(Collection<GrantedAuthority> authorities) {
-	            this.authorities = authorities;
-	        }
-	        
 }
