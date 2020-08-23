@@ -16,6 +16,7 @@ More Spring boot-Vue in a social like app with Security and multimedia Content
 - Secure Cookies thing
 - ~~/Login and /new endpoint~~
 - Create entities (frame, files, etc.. )
+- Hibernate validator 
 - Design RestController(s) (DTO objects, response, router and roles)
 - Implements friendship thing by userRepo.findByUsername("/{Jackson}").isFriend(username);
 - Go deeper on Postman
