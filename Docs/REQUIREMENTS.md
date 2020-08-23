@@ -6,7 +6,7 @@ A rest api on spring boot powered by Vue.js
 | Name  | Description | Status  |
 | ------------- | ------------- | ------------- |
 | Login  | Secure endpoint for sign in and sign up  | `Done` |
-| Content  | Upload multimedia interface  | `none` |
+| Content  | Upload multimedia interface  | `working` |
 | Friends  | Manage friendships and show privileges  | `Working` |
 | Comments  |  CRUD comments system | `none` |
 | Likes | Like interface | `none`|
