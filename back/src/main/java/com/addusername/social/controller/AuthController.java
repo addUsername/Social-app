@@ -1,5 +1,6 @@
 package com.addusername.social.controller;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,10 +27,13 @@ import com.addusername.social.dto.Message;
 import com.addusername.social.dto.NewClient;
 import com.addusername.social.entities.Client;
 import com.addusername.social.entities.Rol;
+import com.addusername.social.entities.content.Content;
+import com.addusername.social.entities.content.Frame;
 import com.addusername.social.enums.RolName;
 import com.addusername.social.security.MyUserDetails;
 import com.addusername.social.security.jwt.JwtProvider;
 import com.addusername.social.service.ClientService;
+import com.addusername.social.service.ContentService;
 import com.addusername.social.service.RolService;
 
 @RestController
@@ -44,6 +48,8 @@ public class AuthController {
 	
 	@Autowired
 	ClientService clientService;
+	@Autowired
+	ContentService contentService;
 	
 	@Autowired
 	RolService rolService;
@@ -82,6 +88,11 @@ public class AuthController {
 	}
     usuario.setRoles(roles);
     clientService.save(usuario);
+    //Como no hemos relacionado el objeto Client con ContentClient, ahora tenemos que crear uno    
+    System.out.println(usuario.getUsername());
+    Content newContent = new Content(usuario.getUsername(),new ArrayList<Content>(),new ArrayList<Frame>());
+    contentService.save(newContent);
+    
     return new ResponseEntity(new Message("usuario guardado"), HttpStatus.CREATED);
 	}
 	

@@ -20,9 +20,9 @@ public class Comment {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	@NotBlank
-	private Long text;
+	private String text;
 	//private Date date; //o string..
-	public Comment(@NotBlank Long text) {
+	public Comment(@NotBlank String text) {
 		this.text = text;
 	}
 	

@@ -21,16 +21,24 @@ import lombok.Setter;
 @NoArgsConstructor @Getter @Setter
 public class Content {
 
-	@Id()
+	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@NotNull
-	private Long username;
+	//sera añadido a mano para poder conectar los repos mediante la variable username. pero sin union real en la bbdd y asi llamar solo al repo de 
+	@Column(unique = true)
+	private String username;
 	
 	@ManyToMany
 	private List<Content> friend_ids;
 	
 	@OneToMany(mappedBy = "content", fetch = FetchType.LAZY)
 	private List<Frame> frames;
+
+	public Content(@NotNull String username, List<Content> friend_ids, List<Frame> frames) {
+		this.username = username;
+		this.friend_ids = friend_ids;
+		this.frames = frames;
+	}
+	
 }
