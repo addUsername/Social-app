@@ -8,6 +8,9 @@ More Spring boot-Vue in a social like app with Security and multimedia Content
 - JPA persistence entities Client and Rol.
 - DTO object JwtDTO, Message, User, newUser.
 - Postman test environment.
+- JPA persistence entities.content.
+- ContentController and verify creator.
+- Lombock
 
 ## TODO
 - ~~Set requeriments, identify dependencies for both~~ 
@@ -15,10 +18,13 @@ More Spring boot-Vue in a social like app with Security and multimedia Content
 - ~~Integrate JWT~~
 - Secure Cookies thing
 - ~~/Login and /new endpoint~~
-- Create entities (frame, files, etc.. )
-- Hibernate validator 
-- Design RestController(s) (DTO objects, response, router and roles)
+- ~~Create entities (frame, files, etc.. )~~
+- Hibernate validator
+- Refactor lombok
+- ~~Design RestController(s) (DTO objects, response, router and roles)~~
 - Implements friendship thing by userRepo.findByUsername("/{Jackson}").isFriend(username);
+- Write file IO thing (modify existent JPAentities, add DAOentities, Controller thing and implement it)
+- Read about asynchronous and see how to include if it suits at streaming part
 - Go deeper on Postman
 
 ## Then
@@ -33,7 +39,7 @@ More Spring boot-Vue in a social like app with Security and multimedia Content
 ## One day..
 - Multimedia thing (working on)
 - Router
-- Make it pretty
+- Make it pretty (no way..)
 - More tests, maybe automate things
 - ...
 - Make app thing ^^
