@@ -5,20 +5,20 @@ A rest api on spring boot powered by Vue.js
 
 | Name  | Description | Status  |
 | ------------- | ------------- | ------------- |
-| Login  | Secure endpoint for sign in and sign up  | `none` |
+| Login  | Secure endpoint for sign in and sign up  | `Done` |
 | Content  | Upload multimedia interface  | `none` |
-| Friends  | Manage friendships and show privileges  | `none` |
+| Friends  | Manage friendships and show privileges  | `Working` |
 | Comments  |  CRUD comments system | `none` |
 | Likes | Like interface | `none`|
-| Test | Make test for spring and vue | `none`|
+| Test | Make test for spring and vue | `Working`|
 | Deploy | Dockerize and try to deploy frontend as static app (ideally w/o alter a lot of lines..) | `none`|
 
 # Test
 | Name  | Requirements | Technology | Description | Status  |
 | ------------- | ------------- | ------------- | ------------- | ------------- |
-| LOGIN01  | Login  | Postman |  check home access with a valid and invalid credentials | `none` |
+| LOGIN01  | Login  | Postman |  check home access with a valid and invalid credentials | `done` |
 | LOGIN02  | Login  | Selenium |  check for app feedback while sign in| `none` |
-| REGISTER01  | Login  | Postman |  check sign up validators (email and user name) | `none` |
+| REGISTER01  | Login  | Postman |  check sign up validators (email and user name) | `done` |
 | REGISTER02  | Login  | Selenium |  check for sign up feedback while sign up| `none` |
 | UPLOAD01  | Content  | Postman |  check availability of uploaded content | `none` |
 | UPLOAD02  | Content  | Selenium |  try to upload content| `none` |
