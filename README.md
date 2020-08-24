@@ -9,8 +9,10 @@ More Spring boot-Vue in a social like app with Security and multimedia Content
 - DTO object JwtDTO, Message, User, newUser.
 - Postman test environment.
 - JPA persistence entities.content.
-- ContentController and verify creator.
-- Lombock
+- ContentController look for for login, role and friend.
+- Lombock.
+- POST/GET backend file management, persistence and controller.
+- Add media and mediaDTO clases.
 
 ## TODO
 - ~~Set requeriments, identify dependencies for both~~ 
@@ -23,9 +25,11 @@ More Spring boot-Vue in a social like app with Security and multimedia Content
 - Refactor lombok
 - ~~Design RestController(s) (DTO objects, response, router and roles)~~
 - Implements friendship thing by userRepo.findByUsername("/{Jackson}").isFriend(username);
-- Write file IO thing (modify existent JPAentities, add DAOentities, Controller thing and implement it)
-- Read about asynchronous and see how to include if it suits at streaming part
+- ~~Write file IO thing (modify existent JPAentities, add DAOentities, Controller thing and implement it)~~
+- Deploy prototype api, write test
+- Read about asynchronous and see how to include it if suits are meet
 - Go deeper on Postman
+- Start with Vue.js
 
 ## Then
 - ~~Complete entity classes and RestController for Spring~~
