@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.addusername.social.dto.ContentClient;
+import com.addusername.social.dto.MediaDTO;
 import com.addusername.social.dto.Message;
 import com.addusername.social.entities.Client;
 import com.addusername.social.entities.content.Comment;
@@ -30,24 +31,28 @@ import com.addusername.social.entities.content.Media;
 import com.addusername.social.repository.ClientRepository;
 import com.addusername.social.repository.ContentRepository;
 import com.addusername.social.security.MyUserDetails;
+import com.addusername.social.service.ClientService;
+import com.addusername.social.service.FrameService;
 
 @RestController
-@RequestMapping("api/media")
+@RequestMapping("api/content")
 public class ContentController {
 
 	@Autowired
 	ContentRepository contentService;
 	@Autowired
-	ClientRepository clientrepo;
+	ClientService clientService;
+	@Autowired
+	FrameService frameService;
 	
 	@PostMapping("/{username}/new")
 	@PreAuthorize("hasRole('USER')")
-	public ResponseEntity<?> addContent(@PathVariable(value = "username") String username,@Valid @RequestBody ContentClient content, BindingResult bindingResult){
+	public ResponseEntity<?> addContent(@PathVariable(value = "username") String username, @Valid @RequestBody ContentClient content, BindingResult bindingResult){
 		
 		if(bindingResult.hasErrors()) return new ResponseEntity(new Message("bindingResult.hasErrors"), HttpStatus.BAD_REQUEST);
 		
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();		
-		if(!username.equals( ((MyUserDetails) auth.getPrincipal()).getUsername() )) return new ResponseEntity(new Message("u are not "+username), HttpStatus.BAD_REQUEST);		
+		if(!username.equals( ((MyUserDetails) auth.getPrincipal()).getUsername()) ) return new ResponseEntity(new Message("u are not "+username), HttpStatus.BAD_REQUEST);		
 
 		Content add_frame_to_content = contentService.findByUsername(username).get();
 
@@ -65,5 +70,52 @@ public class ContentController {
 		Object object = contentService.save(add_frame_to_content);		
 
 		return new ResponseEntity(object, HttpStatus.ACCEPTED);
+	}
+	
+	
+	@GetMapping("/{username}/{id}")
+	@PreAuthorize("hasRole('USER')")
+	public ResponseEntity<?> viewContent(@PathVariable(value = "username") String username,@PathVariable(value = "id") Long id){
+				
+		Boolean isFriend = false;
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String user = ((MyUserDetails) auth.getPrincipal()).getUsername();
+		List <Content> friends = contentService.findByUsername(username).get().getFriend_ids();
+		
+		for(Content friend:friends) {
+			if(friend.getUsername().equals(user)) {
+				isFriend = true;
+				break;
+			};
+		}
+		if(!isFriend ) return new ResponseEntity(new Message("u are not "+username+ " friend :("), HttpStatus.BAD_REQUEST);
+
+		Frame frame = frameService.getById(id).get();
+		Media media = frame.getMedia();
+		MediaDTO send = new MediaDTO(frame.getComments(),media.getPath(),media.getLikes());
+		
+		return new ResponseEntity(send, HttpStatus.ACCEPTED);
+	}
+	
+	
+	
+	@GetMapping("/{username}")
+	@PreAuthorize("hasRole('USER')")
+	public ResponseEntity<?> viewPpal(@PathVariable(value = "username") String username){
+		//Aqui deberiamos hacer una pagina ppal del pive
+		Boolean isFriend = false;
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String user = ((MyUserDetails) auth.getPrincipal()).getUsername();
+		List <Content> friends = contentService.findByUsername(username).get().getFriend_ids();
+		
+		for(Content friend:friends) {
+			if(friend.getUsername().equals(user)) {
+				isFriend = true;
+				break;
+			};
+		}
+		if(!isFriend ) return new ResponseEntity(new Message("u are not "+username+ " friend :("), HttpStatus.BAD_REQUEST);
+
+		return new ResponseEntity(contentService.findById(id).get(), HttpStatus.ACCEPTED);
 	}
 }
