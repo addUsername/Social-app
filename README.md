@@ -13,6 +13,10 @@ More Spring boot-Vue in a social like app with Security and multimedia Content
 - Lombock.
 - POST/GET backend file management, persistence and controller.
 - Add media and mediaDTO clases.
+- Friendship structure by a Set<followerRequest> and Set<Long> friend_ids,
+  not full CRUD implemented
+- Multi file upload and update file(s) are now supported, (same endpoint)
+- Tests for everything above, searching for automatize some of then
 
 ## TODO
 - ~~Set requeriments, identify dependencies for both~~ 
@@ -24,9 +28,10 @@ More Spring boot-Vue in a social like app with Security and multimedia Content
 - Hibernate validator
 - ~~Refactor lombok~~
 - ~~Design RestController(s) (DTO objects, response, router and roles)~~
-- Implements friendship thing by userRepo.findByUsername("/{Jackson}").isFriend(username);
+- ~~Implements friendship thing by userRepo.findByUsername("/{Jackson}").isFriend(username);
 - ~~Write file IO thing (modify existent JPAentities, add DAOentities, Controller thing and implement it)~~
 - Deploy prototype api, write test
+- Response code and exception handling
 - Read about asynchronous and see how to include it if suits are meet
 - Go deeper on Postman
 - Start with Vue.js
@@ -41,8 +46,8 @@ More Spring boot-Vue in a social like app with Security and multimedia Content
 - See how to doc
 
 ## One day..
-- Multimedia thing (working on)
-- Router
+- Multimedia thing (almost done!)
+- Router (pretty easy, low or none @PathVariable)
 - Make it pretty (no way..)
 - More tests, maybe automate things
 - ...
