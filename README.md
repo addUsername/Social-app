@@ -9,14 +9,13 @@ More Spring boot-Vue in a social like app with Security and multimedia Content
 - DTO object JwtDTO, Message, User, newUser.
 - Postman test environment (collection structure).
 - JPA persistence entities.content.
-- ContentController look for for login, role and friend.
 - Lombock.
 - POST/GET backend file management, persistence and controller.
 - Add media and mediaDTO clases.
 - Friendship structure by a Set<followerRequest> and Set<Long> friend_ids,
   not full CRUD implemented
 - Multi file upload and update file(s) are now supported, (same endpoint)
-- Tests for everything above, searching for automatize some of then
+- Tests for everything above, searching for automatize some of them
 
 ## TODO
 - ~~Set requeriments, identify dependencies for both~~ 
