@@ -7,7 +7,7 @@ More Spring boot-Vue in a social like app with Security and multimedia Content
 - JWT with Authorities, encoded password.
 - JPA persistence entities Client and Rol.
 - DTO object JwtDTO, Message, User, newUser.
-- Postman test environment.
+- Postman test environment (collection structure).
 - JPA persistence entities.content.
 - ContentController look for for login, role and friend.
 - Lombock.
@@ -22,7 +22,7 @@ More Spring boot-Vue in a social like app with Security and multimedia Content
 - ~~/Login and /new endpoint~~
 - ~~Create entities (frame, files, etc.. )~~
 - Hibernate validator
-- Refactor lombok
+- ~~Refactor lombok~~
 - ~~Design RestController(s) (DTO objects, response, router and roles)~~
 - Implements friendship thing by userRepo.findByUsername("/{Jackson}").isFriend(username);
 - ~~Write file IO thing (modify existent JPAentities, add DAOentities, Controller thing and implement it)~~
