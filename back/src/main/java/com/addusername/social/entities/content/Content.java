@@ -1,5 +1,6 @@
 package com.addusername.social.entities.content;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -29,12 +30,21 @@ public class Content {
 	@Column(unique = true)
 	private String username;
 	
+	@OneToMany
+	private List<FollowRequest> followRequests = new ArrayList<>();
+	
 	@ManyToMany
-	private List<Content> friend_ids;
+	private List<Content> friend_ids = new ArrayList<>();
 	
 	@OneToMany(mappedBy = "content", fetch = FetchType.LAZY)
-	private List<Frame> frames;
+	private List<Frame> frames = new ArrayList<Frame>();
 
+	public Content(@NotNull String username, List<Content> friend_ids, List<Frame> frames,List<FollowRequest> followRequests) {
+		this.username = username;
+		this.friend_ids = friend_ids;
+		this.frames = frames;
+		this.followRequests = followRequests;
+	}
 	public Content(@NotNull String username, List<Content> friend_ids, List<Frame> frames) {
 		this.username = username;
 		this.friend_ids = friend_ids;

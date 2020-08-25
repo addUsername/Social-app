@@ -3,6 +3,7 @@ package com.addusername.social.entities.content;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -30,16 +31,20 @@ public class Frame {
 	private Content content;
 	
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Media Media;
+	private Media media;
 	
 	@OneToMany
 	private List<Comment> comments;
+	
+	@Column(name = "text")
+	private String text;
 
-	public Frame(Content content, com.addusername.social.entities.content.Media media, List<Comment> comments) {
+	public Frame(Content content, Media media, List<Comment> comments, String text) {
 		super();
 		this.content = content;
-		Media = media;
+		this.media = media;
 		this.comments = comments;
+		this.text = text;
 	}
 	
 	

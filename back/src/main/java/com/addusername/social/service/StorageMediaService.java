@@ -1,6 +1,5 @@
 package com.addusername.social.service;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
@@ -8,7 +7,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -17,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.addusername.social.dto.InMediaDTO;
 import com.addusername.social.entities.content.Comment;
 import com.addusername.social.entities.content.Content;
 import com.addusername.social.entities.content.Frame;
@@ -26,37 +25,32 @@ import com.addusername.social.repository.MediaRespository;
 @Service
 public class StorageMediaService {
 	//Create a Service class to store and download files on the server, and to store information in the database.
-	private String uploadLocation = "/static/media/upload";
+	//we should pick up this from application.propetes
+	private String uploadLocation = "src/main/resources/static/media/upload";
 	
+	//Change to service.. see services vs repositories
 	@Autowired
 	MediaRespository mediarepo;
 	@Autowired
 	ContentService contentService;
-	/*
 	@Autowired
-	public StorageMediaService(Media media) {	
-	    this.fileLocation = Paths.get(media.getUploadDir())	
-	            .toAbsolutePath().normalize();	
-	    try {	
-	        Files.createDirectories(this.fileLocation);
-		    } catch (Exception ex) {
-		        System.out.println("Could not create the directory where the uploaded files will be stored.");
-		    }
-	}
-	*/										//no es necesario ¿?
-	public String saveFile(MultipartFile file, String username, String frameId, String docType) {
+	FrameService frameService;
+	
+	//Save file..
+	public String saveFile(MultipartFile file, InMediaDTO mediaDTO) {
 		
 		//prepare folder
-		Path folder = Paths.get(this.uploadLocation + "/" + username);
+		Path folder = Paths.get(this.uploadLocation + "/" + mediaDTO.getUsername());
 		try {
-			Files.createDirectories(folder);
+			folder = Files.createDirectories(folder);
 		} catch (IOException e) {
 			e.printStackTrace();
-		}		
+		}
 		//getting the name
 		String originalFileName = StringUtils.cleanPath(file.getOriginalFilename());
 		String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
-		String filename = frameId + extension;		
+		//this could be a title in the future, just need a unique not id
+		String filename = mediaDTO.getFrameId() + extension;
 		Path saveLocation = folder.resolve(filename);
 		
 		//Copiamos y reemplazamos si existe
@@ -64,30 +58,33 @@ public class StorageMediaService {
 			Files.copy(file.getInputStream(), saveLocation, StandardCopyOption.REPLACE_EXISTING);
 		} catch (IOException e) {
 			e.printStackTrace();
-		}		
-		//Media persistence
-		if(mediarepo.existsByFilename(filename)) return "contenido actualizado";
+		}
 		
+		//Persistence
+		//if(mediarepo.existsByFilename(filename)) toReturn = "Update frame";
+		String toReturn = (!mediarepo.existsByFilename(filename))? "Add frame" : "Update frame";
 		Media media = new Media();
-		media.setDocumentType(docType);
-		media.setPath(saveLocation.toString());
+		media.setDocumentType(extension);
+		media.setPath(saveLocation.toFile().getAbsolutePath());
 		media.setFilename(filename);
+		
 		Frame frame = new Frame();
 		frame.setComments(new ArrayList<Comment>());
 		frame.setMedia(media);
+		frame.setText(mediaDTO.getText());
 		
-		Content content = contentService.getByUsername(username).get();
-		List<Frame> frames = content.getFrames();
-		frames.add(frame);
+		Content content = contentService.getByUsername(mediaDTO.getUsername()).get();
+		frame.setContent(content);
+		frameService.save(frame);
 		
-		contentService.save(content);
-				
-		return "Contenido actualizado omguush";
+		return toReturn;
 	}
 	
-	public Resource loadFileAsResource(String filePath) {
+	public Resource loadFileAsResource(Media media) {
+			
 		
-		Path path = Paths.get(filePath);
+		Path path = Paths.get(media.getPath());
+		if(!mediarepo.existsByFilename(media.getFilename())) return null;
 		Resource resource = null;
 		try {
 			resource = new UrlResource(path.toUri());

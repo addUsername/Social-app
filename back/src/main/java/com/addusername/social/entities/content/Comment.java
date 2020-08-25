@@ -21,6 +21,8 @@ public class Comment {
 	private Long id;
 	@NotBlank
 	private String text;
+	private Boolean edited;
+	private Date date;
 	//private Date date; //o string..
 	public Comment(@NotBlank String text) {
 		this.text = text;

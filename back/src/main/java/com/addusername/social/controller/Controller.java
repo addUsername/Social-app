@@ -1,11 +1,19 @@
 package com.addusername.social.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,8 +26,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.addusername.social.dto.ContentClient;
+import com.addusername.social.dto.InFile_etraInfoDTO;
+import com.addusername.social.dto.InMediaDTO;
 import com.addusername.social.dto.JwtDTO;
 import com.addusername.social.dto.Message;
 import com.addusername.social.entities.Client;
@@ -67,6 +78,25 @@ public class Controller {
 		Content add_frame_to_content = contentrepo.findByUsername(username).get();
 
 		return new ResponseEntity(add_frame_to_content, HttpStatus.ACCEPTED);
+	}
+	
+	@GetMapping("upload")
+	public ResponseEntity<Resource> showd() {
+		
+		InFile_etraInfoDTO toReturn = new InFile_etraInfoDTO();
+		InMediaDTO media = new InMediaDTO("1","doc","myJackson","funciona o que");
+		toReturn.setExtraInfo(media);
+		
+		Path path = Paths.get("img/hola.jpg");
+		Resource resource = null;
+		try {
+			resource = new UrlResource(path.toUri());
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		return new ResponseEntity<Resource>(resource,HttpStatus.OK);
+		
+		
 	}
 
 }

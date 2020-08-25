@@ -20,5 +20,8 @@ public class FrameService {
 	public Optional<Frame> getById(Long id){
 		return repo.findById(id);		
 	}
+	public void save(Frame frame) {
+		repo.save(frame);
+	}
 
 }
