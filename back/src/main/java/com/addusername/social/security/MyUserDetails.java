@@ -10,6 +10,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.addusername.social.entities.Client;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor @Getter
 public class MyUserDetails implements UserDetails {
 
 	private Long id;

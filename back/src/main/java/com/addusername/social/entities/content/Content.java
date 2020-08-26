@@ -26,7 +26,8 @@ public class Content {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	//sera añadido a mano para poder conectar los repos mediante la variable username. pero sin union real en la bbdd y asi llamar solo al repo de 
+	//sera añadido a mano para poder conectar los repos mediante la variable username. pero sin union real en la bbdd y asi llamar solo al repo de
+	//Testear si se pueden gardar 2 username iguales
 	@Column(unique = true)
 	private String username;
 	

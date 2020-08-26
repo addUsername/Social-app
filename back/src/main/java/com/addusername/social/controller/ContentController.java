@@ -1,5 +1,6 @@
 package com.addusername.social.controller;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -29,8 +30,10 @@ import com.addusername.social.dto.InMediaDTO;
 import com.addusername.social.dto.Message;
 import com.addusername.social.dto.OutMediaDTO;
 import com.addusername.social.entities.content.Content;
+import com.addusername.social.entities.content.FollowRequest;
 import com.addusername.social.entities.content.Frame;
 import com.addusername.social.entities.content.Media;
+import com.addusername.social.repository.FollowRepository;
 import com.addusername.social.security.MyUserDetails;
 import com.addusername.social.service.ClientService;
 import com.addusername.social.service.ContentService;
@@ -50,6 +53,8 @@ public class ContentController {
 	StorageMediaService storage;
 	@Autowired
 	ClientService clientService;
+	@Autowired
+	FollowRepository followrepo;
 	
 	@RequestMapping(value = "/upload", method = RequestMethod.POST, consumes = {"multipart/form-data"})
 	@PreAuthorize("hasRole('USER')")
@@ -119,17 +124,23 @@ public class ContentController {
 		Content content = contentService.getByUsername(username).get();
 		return new ResponseEntity(null);
 	}
-	
-	@GetMapping(value = "/follow", produces = MediaType.APPLICATION_JSON_VALUE)
+
+	@PostMapping(value = "/follow")
 	@PreAuthorize("hasRole('USER')")
 	public ResponseEntity<?> follow(@RequestBody String userToFollow){
 		
+		//Conseguimos el ID del user que quiere seguir
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		String user = ((MyUserDetails) auth.getPrincipal()).getUsername();		
-		Long id = clientService.getByUsername(user).get().getId();
-		
-				
-		return new ResponseEntity(new Message("peticion enviada"), HttpStatus.ACCEPTED);
+		Long id =  ((MyUserDetails) auth.getPrincipal()).getId();
+		//conseguimos el content del user a segui y actualizamos su lista de followrequest
+		Content content = contentService.getByUsername(userToFollow).get();		
+		FollowRequest followRequest = new FollowRequest(id,content);
+		try {
+			followrepo.save(followRequest);
+		}catch(Exception e) {
+			return new ResponseEntity(new Message("Duplicate entry"), HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity(new Message("Request send"), HttpStatus.ACCEPTED);
 	}
 	/*
 	@GetMapping(value = "/addFriend", produces = MediaType.APPLICATION_JSON_VALUE)
