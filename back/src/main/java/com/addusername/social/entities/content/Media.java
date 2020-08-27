@@ -28,18 +28,18 @@ public class Media {
 	private String filename;
 	@Column(name = "document_type")
 	private String documentType;
-	@Column(name = "upload_dir")
-	private String uploadDir;
 	@Column(name = "path")
 	private String path;
+	@Column(name = "mini_image")
+	private String mini_image;
 	
-	public Media(String filename, String documentType, String uploadDir, String path) {
+	public Media(String filename, String documentType, String path, String mini_image) {
 		super();
 		this.likes = 0;
 		this.filename = filename;
 		this.documentType = documentType;
-		this.uploadDir = uploadDir;
 		this.path = path;
+		this.mini_image = mini_image;
 	}
 
 	public int addLike() {

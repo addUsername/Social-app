@@ -1,6 +1,9 @@
 package com.addusername.social.service;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -8,6 +11,15 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
+
+import org.jcodec.api.FrameGrab;
+import org.jcodec.api.JCodecException;
+import org.jcodec.common.model.ColorSpace;
+import org.jcodec.common.model.Picture;
+import org.jcodec.scale.AWTUtil;
+import org.jcodec.scale.ColorUtil;
+import org.jcodec.scale.Transform;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -22,11 +34,14 @@ import com.addusername.social.entities.content.Frame;
 import com.addusername.social.entities.content.Media;
 import com.addusername.social.repository.MediaRespository;
 
+
 @Service
 public class StorageMediaService {
 	//Create a Service class to store and download files on the server, and to store information in the database.
 	//we should pick up this from application.propetes
 	private String uploadLocation = "src/main/resources/static/media/upload";
+	private int MiniImageHeight = 100;
+	private int MiniImageWidth = 100;
 	
 	//Change to service.. see services vs repositories
 	@Autowired
@@ -56,9 +71,11 @@ public class StorageMediaService {
 		//Copiamos y reemplazamos si existe
 		try {
 			Files.copy(file.getInputStream(), saveLocation, StandardCopyOption.REPLACE_EXISTING);
+			getThumbnail(saveLocation.toFile());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
 		
 		//Persistence
 		//if(mediarepo.existsByFilename(filename)) toReturn = "Update frame";
@@ -92,6 +109,28 @@ public class StorageMediaService {
 			e.printStackTrace();
 		}
 		return resource;
+	}
+	
+	private void getThumbnail(File file) {
+		
+		String filename = file.getAbsolutePath();
+		String path = filename.substring(0,filename.lastIndexOf(".")) + ".png";
+		try {
+			//pillamos el frame
+			Picture picture = FrameGrab.getFrameFromFile(file, 50);
+			//creamos mini frame
+			Picture mini = Picture.create(MiniImageWidth, MiniImageHeight, ColorSpace.RGB);
+			
+			Transform transform = ColorUtil.getTransform(picture.getColor(), ColorSpace.RGB);
+			transform.transform(picture, mini);
+			BufferedImage bufferedImage = AWTUtil.toBufferedImage(mini); 
+			ImageIO.write(bufferedImage, "png", new File(path));
+			
+		} catch (IOException | JCodecException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 	
 }

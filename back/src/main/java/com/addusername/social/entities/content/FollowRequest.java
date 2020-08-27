@@ -48,10 +48,13 @@ public class FollowRequest {
 	@JoinColumn(name = "content_id")
 	private Content content;
 	
-	public FollowRequest(Long followerId,Content content) {
+	private boolean acepted;
+	
+	public FollowRequest(Long followerId,Content content, boolean acepted) {
 		super();
 		this.followerId = followerId;
 		this.content = content;
+		this.acepted = acepted;
 	}
 	
 	

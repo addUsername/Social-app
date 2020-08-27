@@ -104,22 +104,23 @@ public class ContentController {
 	
 	@GetMapping(value = "view/{username}")
 	@PreAuthorize("hasRole('USER')")
-	public ResponseEntity<?> getContent(
+	public ResponseEntity<?> getHome(
 			@Valid @RequestBody BindingResult bindingResult,
 			@PathVariable(value = "username") String username){
 		
 		Boolean isFriend = false;
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		String user = ((MyUserDetails) auth.getPrincipal()).getUsername();
+		Long id = ((MyUserDetails) auth.getPrincipal()).getId();
 		List <Content> friends = contentService.getByUsername(username).get().getFriend_ids();
 		
 		for(Content friend:friends) {
-			if(friend.getUsername().equals(user)) {
+			if(friend.getId() == id) {
 				isFriend = true;
 				break;
 			};
 		}
 		if(!isFriend ) return new ResponseEntity(new Message("u are not "+username+ " friend :("), HttpStatus.BAD_REQUEST);
+		
 		
 		Content content = contentService.getByUsername(username).get();
 		return new ResponseEntity(null);
@@ -134,7 +135,7 @@ public class ContentController {
 		Long id =  ((MyUserDetails) auth.getPrincipal()).getId();
 		//conseguimos el content del user a segui y actualizamos su lista de followrequest
 		Content content = contentService.getByUsername(userToFollow).get();		
-		FollowRequest followRequest = new FollowRequest(id,content);
+		FollowRequest followRequest = new FollowRequest(id,content,false);
 		try {
 			followrepo.save(followRequest);
 		}catch(Exception e) {
@@ -142,11 +143,43 @@ public class ContentController {
 		}
 		return new ResponseEntity(new Message("Request send"), HttpStatus.ACCEPTED);
 	}
-	/*
-	@GetMapping(value = "/addFriend", produces = MediaType.APPLICATION_JSON_VALUE)
+	
+	@PostMapping(value = "/addFriend", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('USER')")
-	public ResponseEntity<?> setFriends
-	*/
+	public ResponseEntity<?> setFriends(@RequestBody String id){
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		FollowRequest followreq = followrepo.findById(Long.parseLong(id)).get();
+		Content content = followreq.getContent();
+		
+		if(!content.getUsername().equals( ((MyUserDetails) auth.getPrincipal()).getUsername()) ) return new ResponseEntity(new Message("U are not"), HttpStatus.ACCEPTED);
+		
+		Content make_this_user_friend = contentService.findById(followreq.getFollowerId()).get();
+		
+		List <Content> hola = content.getFriend_ids();
+		hola.add(make_this_user_friend);
+		content.setFriend_ids(hola);
+		
+		followreq.setAcepted(true);
+		contentService.save(content);
+		//followrepo.save(followreq);
+		//followrepo.delete(followreq);
+		
+		return new ResponseEntity(new Message("Add friend"), HttpStatus.ACCEPTED);
+	}
+	
+	//TO DO
+	@PostMapping(value = "/like", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('USER')")
+	public ResponseEntity<?> setLike(@RequestBody String id){
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		Frame frame = frameService.getById(Long.parseLong(id)).get();
+		frame.getMedia().addLike();
+		frameService.save(frame);
+		return new ResponseEntity(new Message("liked"), HttpStatus.ACCEPTED);
+	}
+	
 	/*
 	@PostMapping("/{username}/new")
 	@PreAuthorize("hasRole('USER')")

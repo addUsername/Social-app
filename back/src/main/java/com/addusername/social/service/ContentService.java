@@ -15,6 +15,9 @@ import com.addusername.social.repository.ContentRepository;
 @Service
 public class ContentService {
 	
+	public Optional<Content> findById(Long id){
+		return repo.findById(id);
+	}
 	@Autowired
 	ContentRepository repo;
 	public Optional<Content> getByUsername(String nu){

@@ -8,6 +8,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,6 +24,7 @@ public class Comment {
 	@NotBlank
 	private String text;
 	private Boolean edited;
+	@CreationTimestamp
 	private Date date;
 	//private Date date; //o string..
 	public Comment(@NotBlank String text) {
