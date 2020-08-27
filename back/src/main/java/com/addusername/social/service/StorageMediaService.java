@@ -67,11 +67,12 @@ public class StorageMediaService {
 		//this could be a title in the future, just need a unique not id
 		String filename = mediaDTO.getFrameId() + extension;
 		Path saveLocation = folder.resolve(filename);
+		String mini_image = "null";
 		
 		//Copiamos y reemplazamos si existe
 		try {
 			Files.copy(file.getInputStream(), saveLocation, StandardCopyOption.REPLACE_EXISTING);
-			getThumbnail(saveLocation.toFile());
+			mini_image = getThumbnail(saveLocation.toFile());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -84,6 +85,8 @@ public class StorageMediaService {
 		media.setDocumentType(extension);
 		media.setPath(saveLocation.toFile().getAbsolutePath());
 		media.setFilename(filename);
+		media.setMini_image(mini_image);
+		
 		
 		Frame frame = new Frame();
 		frame.setComments(new ArrayList<Comment>());
@@ -110,8 +113,22 @@ public class StorageMediaService {
 		}
 		return resource;
 	}
+	public Resource loadThumnailAsResource(Media media) {
+		//testar
+		
+		Path path = Paths.get(media.getMini_image());
+		if(!mediarepo.existsByFilename(media.getFilename())) return null;
+		Resource resource = null;
+		try {
+			resource = new UrlResource(path.toUri());
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		return resource;
+	}
 	
-	private void getThumbnail(File file) {
+	private String getThumbnail(File file) {
+		//falta la persistencia y que antes se compruebe si el fichero ha sido creado.. si no que metal null e imagen por defecto
 		
 		String filename = file.getAbsolutePath();
 		String path = filename.substring(0,filename.lastIndexOf(".")) + ".png";
@@ -131,6 +148,7 @@ public class StorageMediaService {
 			e.printStackTrace();
 		}
 		
+		return path;
 	}
 	
 }
