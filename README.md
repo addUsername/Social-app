@@ -16,6 +16,9 @@ More Spring boot-Vue in a social like app with Security and multimedia Content
   not full CRUD implemented
 - Multi file upload and update file(s) are now supported, (same endpoint)
 - Tests for everything above, searching for automatize some of them
+- Add jcodec dependencies and preview video image service.
+- Add like endpoint.
+  
 
 ## TODO
 - ~~Set requeriments, identify dependencies for both~~ 
