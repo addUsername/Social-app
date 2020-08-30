@@ -1,14 +1,17 @@
 package com.addusername.social.dto;
 
-import org.springframework.web.multipart.MultipartFile;
+import java.util.List;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 @NoArgsConstructor@Getter@Setter
 public class Home {
 	
-	private MultipartFile file;
-
+	public String username;	
+	private String img;
+	private List<String> imgs;
+	private List<Long> idFrame;
+	//private List<Resource> imgs;
+	
 }

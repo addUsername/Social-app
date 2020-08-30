@@ -17,7 +17,7 @@ import javax.persistence.OneToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
+//el frame cero sera el home, con los comentarios vacios o no..
 @Entity
 @NoArgsConstructor @Getter @Setter
 public class Frame {

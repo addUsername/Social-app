@@ -22,7 +22,7 @@ public class JwtProvider {
 	
 	private static  final Logger logger = LoggerFactory.getLogger(JwtEntryPoint.class);
 
-	//Obtenemos la propiedad del application propities
+	//Obtenemos la propiedad del application propities ¿o creo que no.. dice que no se usa
     @Value("${jwt.secret}")
     private String secret;
 

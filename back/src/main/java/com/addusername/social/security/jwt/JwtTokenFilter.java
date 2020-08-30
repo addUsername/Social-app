@@ -42,6 +42,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 	
 	 private String getToken(HttpServletRequest request){
 		 
+		 	//Esto esta bien??
 	        String authReq = request.getHeader("Authorization");
 	        if(authReq != null && authReq.startsWith("Bearer "))
 	            return authReq.replace("Bearer ", "");

@@ -33,6 +33,7 @@ import com.addusername.social.entities.content.Content;
 import com.addusername.social.entities.content.FollowRequest;
 import com.addusername.social.entities.content.Frame;
 import com.addusername.social.entities.content.Media;
+//SACAR TODO LO QUE SE PUEDA DE AQUI... EL CONTROLER no debe contener mucha logica
 import com.addusername.social.repository.FollowRepository;
 import com.addusername.social.security.MyUserDetails;
 import com.addusername.social.service.ClientService;
@@ -43,7 +44,7 @@ import com.addusername.social.service.StorageMediaService;
 @RestController
 @RequestMapping("api/content")
 public class ContentController {
-
+//ESTO VA A LLEVAR A api/social SocialController.java
 	
 	@Autowired
 	ContentService contentService;
@@ -72,59 +73,36 @@ public class ContentController {
 		
 		return new ResponseEntity(new Message(message), HttpStatus.OK);
 	}
-	
-	@GetMapping(value = "/Social", produces = MediaType.APPLICATION_JSON_VALUE)
-	@PreAuthorize("hasRole('USER')")
-	public ResponseEntity<?> getFrame(
-			@Valid @RequestBody BindingResult bindingResult,
-			@RequestParam InMediaDTO extraInfo){
-		
-		if(bindingResult.hasErrors()) return new ResponseEntity(new Message("Response entity malformed :S"), HttpStatus.BAD_REQUEST);		
-		
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();		
-		if(!extraInfo.getUsername().equals(( (MyUserDetails) auth.getPrincipal() ).getUsername())) {
-			return new ResponseEntity(new Message("u are not "), HttpStatus.BAD_REQUEST);
-		}
-		
-		
-		Frame frame = frameService.getById(Long.parseLong(extraInfo.getFrameId())).get();
-		Media media = frame.getMedia();
-		OutMediaDTO out = new OutMediaDTO();
-		
-		//change to async method?
-		Resource resource = storage.loadFileAsResource(media);
-				
-		out.setComments(frame.getComments());
-		out.setText(frame.getText());
-		out.setLikes(media.getLikes());
-		out.setDocumentType(media.getDocumentType());
-		Object[] res = {resource, frame};
-		return new ResponseEntity(res, HttpStatus.OK);
-	}
-	
-	@GetMapping(value = "view/{username}")
-	@PreAuthorize("hasRole('USER')")
-	public ResponseEntity<?> getHome(
-			@Valid @RequestBody BindingResult bindingResult,
-			@PathVariable(value = "username") String username){
-		
-		Boolean isFriend = false;
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		Long id = ((MyUserDetails) auth.getPrincipal()).getId();
-		List <Content> friends = contentService.getByUsername(username).get().getFriend_ids();
-		
-		for(Content friend:friends) {
-			if(friend.getId() == id) {
-				isFriend = true;
-				break;
-			};
-		}
-		if(!isFriend ) return new ResponseEntity(new Message("u are not "+username+ " friend :("), HttpStatus.BAD_REQUEST);
-		
-		
-		Content content = contentService.getByUsername(username).get();
-		return new ResponseEntity(null);
-	}
+//	
+//	@GetMapping(value = "/Social", produces = MediaType.APPLICATION_JSON_VALUE)
+//	@PreAuthorize("hasRole('USER')")
+//	public ResponseEntity<?> getFrame(
+//			@Valid @RequestBody BindingResult bindingResult,
+//			@RequestParam InMediaDTO extraInfo){
+//		
+//		if(bindingResult.hasErrors()) return new ResponseEntity(new Message("Response entity malformed :S"), HttpStatus.BAD_REQUEST);		
+//		
+//		Authentication auth = SecurityContextHolder.getContext().getAuthentication();		
+//		if(!extraInfo.getUsername().equals(( (MyUserDetails) auth.getPrincipal() ).getUsername())) {
+//			return new ResponseEntity(new Message("u are not "), HttpStatus.BAD_REQUEST);
+//		}
+//		
+//		//A Partir de aqui todo esto va algun service, que nos devuelva String si ok oq
+//		
+//		Frame frame = frameService.getById(Long.parseLong(extraInfo.getFrameId())).get();
+//		Media media = frame.getMedia();
+//		OutMediaDTO out = new OutMediaDTO();
+//		
+//		//change to async method?
+//		Resource resource = storage.loadFileAsResource(media);
+//				
+//		out.setComments(frame.getComments());
+//		out.setText(frame.getText());
+//		out.setLikes(media.getLikes());
+//		out.setDocumentType(media.getDocumentType());
+//		Object[] res = {resource, frame};
+//		return new ResponseEntity(res, HttpStatus.OK);
+//	}
 
 	@PostMapping(value = "/follow")
 	@PreAuthorize("hasRole('USER')")
@@ -133,6 +111,8 @@ public class ContentController {
 		//Conseguimos el ID del user que quiere seguir
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		Long id =  ((MyUserDetails) auth.getPrincipal()).getId();
+		//A Partir de aqui todo esto va en client service, que nos devuelva String si ok oq
+		
 		//conseguimos el content del user a segui y actualizamos su lista de followrequest
 		Content content = contentService.getByUsername(userToFollow).get();		
 		FollowRequest followRequest = new FollowRequest(id,content,false);
@@ -153,7 +133,7 @@ public class ContentController {
 		Content content = followreq.getContent();
 		
 		if(!content.getUsername().equals( ((MyUserDetails) auth.getPrincipal()).getUsername()) ) return new ResponseEntity(new Message("U are not"), HttpStatus.ACCEPTED);
-		
+		//A Partir de aqui todo esto va en client service, que nos devuelva String si ok oq
 		Content make_this_user_friend = contentService.findById(followreq.getFollowerId()).get();
 		
 		List <Content> hola = content.getFriend_ids();
@@ -190,7 +170,7 @@ public class ContentController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();		
 		if(!username.equals( ((MyUserDetails) auth.getPrincipal()).getUsername()) ) return new ResponseEntity(new Message("u are not "+username), HttpStatus.BAD_REQUEST);		
 
-		Content add_frame_to_content = contentService.findByUsername(username).get();
+		Content add_frame_to_content = contentrepo.findByUsername(username).get();
 
 		Media media = new Media();
 		media.setLikes(0);
@@ -203,7 +183,7 @@ public class ContentController {
 		List <Frame> frames = add_frame_to_content.getFrames();
 		frames.add(frame);
 		add_frame_to_content.setFrames(frames);
-		Object object = contentService.save(add_frame_to_content);		
+		Object object = contentrepo.save(add_frame_to_content);		
 
 		return new ResponseEntity(object, HttpStatus.ACCEPTED);
 	}
@@ -216,7 +196,7 @@ public class ContentController {
 		Boolean isFriend = false;
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String user = ((MyUserDetails) auth.getPrincipal()).getUsername();
-		List <Content> friends = contentService.findByUsername(username).get().getFriend_ids();
+		List <Content> friends = contentrepo.findByUsername(username).get().getFriend_ids();
 		
 		for(Content friend:friends) {
 			if(friend.getUsername().equals(user)) {
@@ -242,7 +222,7 @@ public class ContentController {
 		Boolean isFriend = false;
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String user = ((MyUserDetails) auth.getPrincipal()).getUsername();
-		List <Content> friends = contentService.findByUsername(username).get().getFriend_ids();
+		List <Content> friends = contentrepo.findByUsername(username).get().getFriend_ids();
 		
 		for(Content friend:friends) {
 			if(friend.getUsername().equals(user)) {
@@ -252,7 +232,7 @@ public class ContentController {
 		}
 		if(!isFriend ) return new ResponseEntity(new Message("u are not "+username+ " friend :("), HttpStatus.BAD_REQUEST);
 
-		return new ResponseEntity(contentService.findById(id).get(), HttpStatus.ACCEPTED);
+		return new ResponseEntity(contentrepo.findById(id).get(), HttpStatus.ACCEPTED);
 	}
 	*/
 }

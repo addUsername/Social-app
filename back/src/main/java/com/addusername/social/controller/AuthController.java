@@ -66,7 +66,7 @@ public class AuthController {
 	if(clientService.existsByEmail(nuevoUsuario.getEmail()))
 	    return new ResponseEntity(new Message("ese email ya existe"), HttpStatus.BAD_REQUEST);
 	
-	//Creamos usuario final
+	//A Partir de aqui todo esto va en client service, que nos devuelva String si ok oq
 	Client usuario =
 	        new Client(nuevoUsuario.getName(), nuevoUsuario.getUsername(), nuevoUsuario.getEmail(),
 	                passwordEncoder.encode(nuevoUsuario.getPassword()));
@@ -103,6 +103,7 @@ public class AuthController {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginUsuario.getUsername(), loginUsuario.getPassword())
         );
+        //esto igual.. al clientservice
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtProvider.generateToken(authentication);
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();

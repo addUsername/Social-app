@@ -38,8 +38,6 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
-
-
 	@Override
 	@Bean
 	public AuthenticationManager authenticationManagerBean() throws Exception {
@@ -70,6 +68,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         .authorizeRequests()
         .antMatchers("/api/auth/**").permitAll() //donde los servicios de login y auth
         .anyRequest().authenticated() //para el resto authentificao
+        .and()
+        .logout().invalidateHttpSession(true) //para el logout que se nos olvidaba
         .and()
         .exceptionHandling().authenticationEntryPoint(jwtentrypoint)
         .and()

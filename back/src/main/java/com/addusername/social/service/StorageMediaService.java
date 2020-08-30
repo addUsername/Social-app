@@ -1,7 +1,9 @@
 package com.addusername.social.service;
 
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -23,6 +25,8 @@ import org.jcodec.scale.Transform;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -40,8 +44,8 @@ public class StorageMediaService {
 	//Create a Service class to store and download files on the server, and to store information in the database.
 	//we should pick up this from application.propetes
 	private String uploadLocation = "src/main/resources/static/media/upload";
-	private int MiniImageHeight = 100;
-	private int MiniImageWidth = 100;
+	private int MiniImageHeight = 500;
+	private int MiniImageWidth = 1000;
 	
 	//Change to service.. see services vs repositories
 	@Autowired
@@ -72,7 +76,7 @@ public class StorageMediaService {
 		//Copiamos y reemplazamos si existe
 		try {
 			Files.copy(file.getInputStream(), saveLocation, StandardCopyOption.REPLACE_EXISTING);
-			mini_image = getThumbnail(saveLocation.toFile());
+			mini_image = getThumbnail(saveLocation.toFile(),mediaDTO.getDocType());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -82,7 +86,7 @@ public class StorageMediaService {
 		//if(mediarepo.existsByFilename(filename)) toReturn = "Update frame";
 		String toReturn = (!mediarepo.existsByFilename(filename))? "Add frame" : "Update frame";
 		Media media = new Media();
-		media.setDocumentType(extension);
+		media.setDocumentType(extension.substring(1));
 		media.setPath(saveLocation.toFile().getAbsolutePath());
 		media.setFilename(filename);
 		media.setMini_image(mini_image);
@@ -100,48 +104,64 @@ public class StorageMediaService {
 		return toReturn;
 	}
 	
-	public Resource loadFileAsResource(Media media) {
+	public Object[] loadFileAsResource(String id) {
 			
 		
-		Path path = Paths.get(media.getPath());
-		if(!mediarepo.existsByFilename(media.getFilename())) return null;
-		Resource resource = null;
-		try {
-			resource = new UrlResource(path.toUri());
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
-		return resource;
-	}
-	public Resource loadThumnailAsResource(Media media) {
-		//testar
+		Object[] objects=new Object[2];
 		
-		Path path = Paths.get(media.getMini_image());
-		if(!mediarepo.existsByFilename(media.getFilename())) return null;
-		Resource resource = null;
-		try {
-			resource = new UrlResource(path.toUri());
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
-		return resource;
+		Media media = mediarepo.findById(Long.parseLong(id)).get();
+		
+		File file = new File( media.getPath());
+		
+		String type = "video";
+		if( (media.getDocumentType().equals("jpg")) || (media.getDocumentType().equals("png"))) type = "image";
+		
+	    HttpHeaders respHeaders = new HttpHeaders();
+		respHeaders.setContentType(new MediaType(type,media.getDocumentType()));
+	    respHeaders.setContentLength(file.length());
+		objects[0] = file;
+		objects[1] = respHeaders;
+		return objects;
+	}
+	public Object[] loadThumbnailAsResource(String id) {
+		
+		Object[] objects=new Object[2];
+				
+		File file = new File( mediarepo.findById(Long.parseLong(id)).get().getMini_image());
+		
+	    HttpHeaders respHeaders = new HttpHeaders();
+		respHeaders.setContentType(new MediaType("image","png"));
+	    respHeaders.setContentLength(file.length());
+		objects[0] = file;
+		objects[1] = respHeaders;
+		return objects;
 	}
 	
-	private String getThumbnail(File file) {
-		//falta la persistencia y que antes se compruebe si el fichero ha sido creado.. si no que metal null e imagen por defecto
-		
+	private String getThumbnail(File file, String type) {
+		// si el fichero ha sido creado.. si no que metal null e imagen por defecto
+		//almost there, queda mirar bien lo de reducir el tamño manteniendo la escala, coger el tamaño del buffer  meter el lado que tenga 200
 		String filename = file.getAbsolutePath();
 		String path = filename.substring(0,filename.lastIndexOf(".")) + ".png";
 		try {
-			//pillamos el frame
-			Picture picture = FrameGrab.getFrameFromFile(file, 50);
-			//creamos mini frame
-			Picture mini = Picture.create(MiniImageWidth, MiniImageHeight, ColorSpace.RGB);
 			
-			Transform transform = ColorUtil.getTransform(picture.getColor(), ColorSpace.RGB);
-			transform.transform(picture, mini);
-			BufferedImage bufferedImage = AWTUtil.toBufferedImage(mini); 
-			ImageIO.write(bufferedImage, "png", new File(path));
+			BufferedImage inputImage=null;
+			
+			if(type.equals("video")){
+				//esto nos permite pillar el frame 50 del video
+				Picture picture = FrameGrab.getFrameFromFile(file, 50);
+				inputImage = AWTUtil.toBufferedImage(picture); 
+			}else {
+				inputImage = ImageIO.read(file);
+			}
+			// creates output image
+	        BufferedImage outputImage = new BufferedImage(200,200, inputImage.getType());
+	 
+	        // scales the input image to the output image
+	        Graphics2D g2d = outputImage.createGraphics();
+	        g2d.drawImage(inputImage, 0, 0, outputImage.getWidth(), outputImage.getHeight(), null);
+	        g2d.dispose();
+	        ImageIO.write(outputImage, "png", new File(path));		
+			
 			
 		} catch (IOException | JCodecException e) {
 			// TODO Auto-generated catch block
