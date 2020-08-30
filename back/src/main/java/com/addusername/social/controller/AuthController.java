@@ -30,7 +30,6 @@ import com.addusername.social.entities.Rol;
 import com.addusername.social.entities.content.Content;
 import com.addusername.social.entities.content.Frame;
 import com.addusername.social.enums.RolName;
-import com.addusername.social.security.MyUserDetails;
 import com.addusername.social.security.jwt.JwtProvider;
 import com.addusername.social.service.ClientService;
 import com.addusername.social.service.ContentService;
@@ -41,19 +40,15 @@ import com.addusername.social.service.RolService;
 public class AuthController {
 	
 	@Autowired
-	PasswordEncoder passwordEncoder;
-	
+	PasswordEncoder passwordEncoder;	
 	@Autowired
-    AuthenticationManager authenticationManager;
-	
+    AuthenticationManager authenticationManager;	
 	@Autowired
 	ClientService clientService;
 	@Autowired
-	ContentService contentService;
-	
+	ContentService contentService;	
 	@Autowired
-	RolService rolService;
-	
+	RolService rolService;	
 	@Autowired
 	JwtProvider jwtProvider;
 	
@@ -70,7 +65,6 @@ public class AuthController {
 	Client usuario =
 	        new Client(nuevoUsuario.getName(), nuevoUsuario.getUsername(), nuevoUsuario.getEmail(),
 	                passwordEncoder.encode(nuevoUsuario.getPassword()));
-	System.out.println("creando role set");
 	
 	Set<String> rolesStr = nuevoUsuario.getRoles();
 	Set<Rol> roles = new HashSet<>();
@@ -88,6 +82,7 @@ public class AuthController {
 	}
     usuario.setRoles(roles);
     clientService.save(usuario);
+    
     //Como no hemos relacionado el objeto Client con ContentClient, ahora tenemos que crear uno    
     System.out.println(usuario.getUsername());
     Content newContent = new Content(usuario.getUsername(),new ArrayList<Content>(),new ArrayList<Frame>());
