@@ -20,6 +20,7 @@ More Spring boot-Vue in a social like app with Security and multimedia Content
 - Add like endpoint.
 - Add Vue project structute
 - Add login and Register template, Vuetify
+- Add router and authService, cors policy on WebSecurity.java
   
 
 ## TODO
@@ -42,8 +43,8 @@ More Spring boot-Vue in a social like app with Security and multimedia Content
 
 ## Then
 - ~~Complete entity classes and RestController for Spring~~
-- Complete Router for Vue
-- Write home and derivated components
+- ~~Complete Router for Vue~~
+- ~~Write home and derivated components~~
 - Design test interface set up for both (reading about)
 - ~~Test api with Postman and save jsons (Deploy static front) (reading about)~~
 - Test static and dinamic(real Spring connection) for login in selenium
