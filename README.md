@@ -18,32 +18,34 @@ More Spring boot-Vue in a social like app with Security and multimedia Content
 - Tests for everything above, searching for automatize some of them
 - Add jcodec dependencies and preview video image service.
 - Add like endpoint.
+- Add Vue project structute
+- Add login and Register template, Vuetify
   
 
 ## TODO
 - ~~Set requeriments, identify dependencies for both~~ 
-- Create both projects structure
+- ~~Create both projects structure~~
 - ~~Integrate JWT~~
 - Secure Cookies thing
 - ~~/Login and /new endpoint~~
 - ~~Create entities (frame, files, etc.. )~~
-- Hibernate validator
+- Hibernate and vue validator
 - ~~Refactor lombok~~
 - ~~Design RestController(s) (DTO objects, response, router and roles)~~
 - ~~Implements friendship thing by userRepo.findByUsername("/{Jackson}").isFriend(username);
 - ~~Write file IO thing (modify existent JPAentities, add DAOentities, Controller thing and implement it)~~
-- Deploy prototype api, write test
+- ~~Deploy prototype api, write test~~
 - Response code and exception handling
 - Read about asynchronous and see how to include it if suits are meet
 - Go deeper on Postman
-- Start with Vue.js
+- ~~Start with Vue.js~~
 
 ## Then
-- Complete entity classes and RestController for Spring
+- ~~Complete entity classes and RestController for Spring~~
 - Complete Router for Vue
 - Write home and derivated components
 - Design test interface set up for both (reading about)
-- Test api with Postman and save jsons (Deploy static front) (reading about)
+- ~~Test api with Postman and save jsons (Deploy static front) (reading about)~~
 - Test static and dinamic(real Spring connection) for login in selenium
 - See how to doc
 
