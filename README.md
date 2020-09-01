@@ -21,6 +21,7 @@ More Spring boot-Vue in a social like app with Security and multimedia Content
 - Add Vue project structute
 - Add login and Register template, Vuetify
 - Add router and authService, cors policy on WebSecurity.java
+- Add token managment, more router
   
 
 ## TODO
