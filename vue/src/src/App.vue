@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app id="inspire">
     <!--
       <Login />
        -->
@@ -44,3 +44,4 @@ export default {
   })
 };
 </script>
+<style></style>
