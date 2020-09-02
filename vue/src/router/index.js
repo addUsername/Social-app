@@ -10,9 +10,12 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/",
+    redirect: "/login"
+  },
+  {
+    path: "/home/:username",
     name: "Home",
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/Home.vue")
+    component: () => import(/* webpackChunkName: "about" */ "../views/Home.vue")
   },
   {
     path: "/about",
@@ -75,7 +78,7 @@ router.beforeEach((to, from, next) => {
   }
 });
 
-function checkToken(){
+function checkToken() {
   if (localStorage.getItem("user")) {
     console.log("Check token truee");
     return true;

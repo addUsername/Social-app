@@ -4,21 +4,21 @@ const ENDPOINT_PATH = "http://localhost:8080/api/auth/";
 
 export default {
   register(name, username, email, password) {
-    console.log("we are here");
     const user = { name, username, email, password };
 
-    axios
+    return axios
       .post(ENDPOINT_PATH + "new", user)
-      .then(this.handeResponse)
-      .then(data => {
-        const user = { username: data.username, token: data.token}
-        localStorage.setItem(user);
+      .then(() => {})
+      .catch(error => {
+        this.logout();
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
       });
-    return true;
   },
   login(username, password) {
     const user = { username, password };
-    axios
+    return axios
       .post(ENDPOINT_PATH + "login", user)
       .then(response => {
         const user = {
@@ -32,7 +32,9 @@ export default {
       })
       .catch(error => {
         this.logout();
-        console.log(error);
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
       });
     //this.$router.push("/");
   },

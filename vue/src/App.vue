@@ -1,19 +1,29 @@
 <template>
-  <v-app>
+  <v-app id="inspire">
     <!--
       <Login />
        -->
-       <transition>
-        <div>
-          <router-link to="/login">login</router-link>
-          <router-link to="/about">about</router-link>
-          <router-link to="/">home</router-link>
-          <keep-alive>
-          <router-view></router-view>
-        </keep-alive>
-        </div>
-        
-      </transition>
+    <v-app-bar color="primary" dense dark>
+      <v-app-bar-nav></v-app-bar-nav>
+      <v-toolbar-title>Page title</v-toolbar-title>
+      <v-spacer></v-spacer>
+
+      <router-link to="/login">
+        <v-btn>
+          <span>IN</span>
+        </v-btn>
+      </router-link>
+      <router-link to="/register">
+        <v-btn>
+          <span>UP</span>
+        </v-btn></router-link
+      >
+    </v-app-bar>
+    <v-main>
+      <keep-alive>
+        <router-view></router-view>
+      </keep-alive>
+    </v-main>
   </v-app>
 </template>
 
@@ -34,3 +44,4 @@ export default {
   })
 };
 </script>
+<style></style>
