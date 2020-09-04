@@ -24,6 +24,8 @@ More Spring boot-Vue in a social like app with Security and multimedia Content
 - Add token managment, more router
 - Login and Sing up woorking
 - Create home.vue grid and v-card template structure
+- Add axios store
+- Several fixies
   
 
 ## TODO
@@ -36,11 +38,11 @@ More Spring boot-Vue in a social like app with Security and multimedia Content
 - Hibernate and vue validator
 - ~~Refactor lombok~~
 - ~~Design RestController(s) (DTO objects, response, router and roles)~~
-- ~~Implements friendship thing by userRepo.findByUsername("/{Jackson}").isFriend(username);
+- ~~Implements friendship thing by userRepo.findByUsername("/{Jackson}").isFriend(username);~~
 - ~~Write file IO thing (modify existent JPAentities, add DAOentities, Controller thing and implement it)~~
 - ~~Deploy prototype api, write test~~
-- Response code and exception handling
-- Read about asynchronous and see how to include it if suits are meet
+- ~~Response code and exception handling~~
+- ~~Read about asynchronous and see how to include it if suits are meet~~
 - Go deeper on Postman
 - ~~Start with Vue.js~~
 
@@ -55,11 +57,11 @@ More Spring boot-Vue in a social like app with Security and multimedia Content
 
 ## One day..
 - Multimedia thing (almost done!)
-- Router (pretty easy, low or none @PathVariable)
-- Make it pretty (no way..)
+- ~~Router (pretty easy, low or none @PathVariable)~~
+- ~~Make it pretty (no way..)~~ (in Vuetify we belive)
 - More tests, maybe automate things
 - ...
-- Make app thing ^^
+- Make app thing ^^ (soon..)
 - Next project.. Deploy this vue in java android and ¿java desktop?
 - Microservices thing and cloud ??
 
