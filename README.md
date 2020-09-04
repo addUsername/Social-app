@@ -25,6 +25,8 @@ More Spring boot-Vue in a social like app with Security and multimedia Content
 - Login and Sing up woorking
 - Create home.vue grid and v-card template structure
 - Add axios store
+- UserService and ContentService are now in charge to request only to its own RestController
+- Divided store in several files
 - Several fixies
   
 
