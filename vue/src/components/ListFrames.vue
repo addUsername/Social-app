@@ -24,15 +24,24 @@ export default {
   name: "listFrames",
   props: ["username"],
   data: () => ({
-    frames: []
+    frames: [],
+    username: ""
   }),
   methods: {
-    logout() {
-      content.getUserFrontPage().then(response => {
-        this.frames = JSON.parse(response);
+    init() {
+      console.log("iniit Lisst");
+      this.frames = this.$parent.thumbImgs;
+      console.log(this.frames);
+    },
+    getThumb(id) {
+      content.getThumbImg(id, this.username).then(response => {
+        this.bigImgUrl = URL.createObjectURL(new Blob([response.data]));
         console.log(response);
       });
     }
+  },
+  mounted() {
+    this.init();
   }
 };
 </script>

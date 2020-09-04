@@ -26,7 +26,7 @@
                     :rules="['Required']"
                     v-model="username"
                   ></v-text-field>
-
+                  <p>login check: {{ $store.getters.isLogged }}</p>
                   <v-text-field
                     id="password"
                     label="Password"
@@ -57,7 +57,7 @@
 </template>
 
 <script>
-import auth from "@/services/authService";
+//import auth from "@/services/authService";
 
 export default {
   data: () => ({
@@ -66,9 +66,15 @@ export default {
   }),
   methods: {
     login() {
-      auth.login(this.username, this.password).then(() => {
-        this.$router.push("/home/" + this.username);
-      });
+      //auth.login(this.username, this.password).then(() => {
+      //  this.$router.push("/home/" + this.username);
+      const user = { username: this.username, password: this.password };
+      this.$store
+        .dispatch("login", user);
+
+      //this.$router.push("/home/" + this.$store.getters.user.username)
+      //esto es para test
+      this.$router.push("/home/" + "myTest");
     }
   }
 };

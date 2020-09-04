@@ -6,11 +6,11 @@
           <v-card class="mx-auto">
             <v-img
               class="white--text align-end"
-              src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
+              v-bind:src="bigImgUrl"
               height="400px"
               align="right"
             >
-              <v-avatar :tile="tile" size="180" color="grey lighten-4">
+              <v-avatar size="180" color="grey lighten-4">
                 <img
                   src="https://vuetifyjs.com/apple-touch-icon-180x180.png"
                   alt="avatar"
@@ -60,8 +60,10 @@ import content from "@/services/contentService";
 export default {
   name: "Home",
   data: () => ({
-    username: ""
-    
+    username: "",
+    response: [],
+    bigImgUrl: "",
+    thumbImgs: []
   }),
   components: { list },
   methods: {
@@ -69,19 +71,21 @@ export default {
       auth.logout();
     },
     init() {
-      /*
-      if (this.$route.username === undefined) {
-        this.$route.push(
-          "/home/" + JSON.parse(localStorage.getItem("user")).username
-        );
-      }
-      */
       console.log("init()!!!!");
       //Cogemos el username del path api/home/{username}
       //content.getUserFrontPage(this.$route.username).then(response => {
-      console.log(this.$route.params.username);
       content.getUserFrontPage(this.$route.params.username).then(response => {
-        console.log(response);
+        console.log(response.data);
+        this.response = response.data;
+        this.thumbImgs = this.response.imgs;
+        console.log(this.thumbImgs);
+        content
+          .getBigImg(this.response.img, this.response.username)
+          .then(response2 => {
+            // this.bigImgUrl = Buffer.from(response.data, "binary").toString("base64" );
+            this.bigImgUrl = URL.createObjectURL(new Blob([response2.data]));
+          });
+        //aqui un for que nos vaya pidiendo las pequeñas asyncronamemte tb oq
       });
     }
   },
