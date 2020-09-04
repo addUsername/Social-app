@@ -18,15 +18,30 @@
 </template>
 
 <script>
-//import auth from "@/services/authService";
+import content from "@/services/contentService";
 
 export default {
   name: "listFrames",
+  props: ["username"],
   data: () => ({
-    frames: ["uno", "dos", "tres", "cuatro", "cinco"]
+    frames: [],
+    username: ""
   }),
   methods: {
-    logout() {}
+    init() {
+      console.log("iniit Lisst");
+      this.frames = this.$parent.thumbImgs;
+      console.log(this.frames);
+    },
+    getThumb(id) {
+      content.getThumbImg(id, this.username).then(response => {
+        this.bigImgUrl = URL.createObjectURL(new Blob([response.data]));
+        console.log(response);
+      });
+    }
+  },
+  mounted() {
+    this.init();
   }
 };
 </script>

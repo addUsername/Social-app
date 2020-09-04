@@ -4,12 +4,17 @@ import VueRouter from "vue-router";
 //import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
 //import About from "../views/About.vue";
+import store from "@/store";
 
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: "/",
+    redirect: "/login"
+  },
+  {
+    path: "/home/:username",
     name: "Home",
     component: () => import(/* webpackChunkName: "about" */ "../views/Home.vue")
   },
@@ -61,7 +66,11 @@ router.beforeEach((to, from, next) => {
   console.log("authrequired?");
   console.log(authRequired);
   if (authRequired) {
-    if (checkToken()) {
+    //if(checktoken())
+    console.log("is logged??");
+    console.log(store.getters.isLogged);
+    console.log(store.getters.user);
+    if (store.getters.isLogged) {
       console.log("There is a token, resume. (" + to.path + ")");
       next();
     } else {
@@ -73,7 +82,8 @@ router.beforeEach((to, from, next) => {
     next(); // This is where it should have been
   }
 });
-
+// esta es la funcion que debemos cambiar.. para ello miramos si la variable isAuth es true from vuex
+/*
 function checkToken() {
   if (localStorage.getItem("user")) {
     console.log("Check token truee");
@@ -82,5 +92,5 @@ function checkToken() {
   console.log("Check token false");
   return false;
 }
-
+*/
 export default router;
