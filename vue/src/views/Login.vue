@@ -69,12 +69,15 @@ export default {
       //auth.login(this.username, this.password).then(() => {
       //  this.$router.push("/home/" + this.username);
       const user = { username: this.username, password: this.password };
-      this.$store
-        .dispatch("login", user);
-
-      //this.$router.push("/home/" + this.$store.getters.user.username)
-      //esto es para test
-      this.$router.push("/home/" + "myTest");
+      this.$store.dispatch("auth/login", user).then(() => {
+        //console.log(this.$store.getters.isLogged);
+        if (this.$store.getters.["auth/isLogged"]) {
+          //this.$router.push("/home/" + this.$store.getters.user.username)
+          //esto es para test
+          console.log("is logged!!");
+          this.$router.push("/home/" + "myTest");
+        }
+      });
     }
   }
 };

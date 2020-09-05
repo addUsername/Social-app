@@ -17,15 +17,13 @@
                 </v-tooltip>
               </v-toolbar>
               <v-card-text>
-                <v-form
-                  @submit.prevent="register"
-                  id="connect-submit-btn-to form"
-                >
+                <v-form @submit.prevent="check" id="connect-submit-btn-to form">
                   <v-text-field
                     label="User"
                     name="user"
                     prepend-icon="mdi-user"
                     type="text"
+                    v-model="name"
                     :rules="['Required']"
                   ></v-text-field>
                   <v-text-field
@@ -33,6 +31,7 @@
                     name="username"
                     prepend-icon="mdi-user"
                     type="text"
+                    v-model="username"
                     :rules="['Required']"
                   ></v-text-field>
                   <v-text-field
@@ -40,6 +39,7 @@
                     name="email"
                     prepend-icon="mdi-email"
                     type="email"
+                    v-model="email"
                     :rules="['Required']"
                   ></v-text-field>
                   <v-text-field
@@ -48,6 +48,7 @@
                     name="password"
                     prepend-icon="mdi-lock"
                     type="password"
+                    v-model="password"
                     :rules="['Required']"
                   ></v-text-field>
                   <v-text-field
@@ -56,6 +57,7 @@
                     name="password2"
                     prepend-icon="mdi-lock"
                     type="password"
+                    v-model="password2"
                     :rules="['Required']"
                   ></v-text-field>
                 </v-form>
@@ -78,7 +80,6 @@
 </template>
 
 <script>
-import auth from "@/services/authService";
 export default {
   data: () => ({
     name: "",
@@ -88,12 +89,27 @@ export default {
     email: ""
   }),
   methods: {
+    check() {
+      if (this.password != this.password2) {
+        alert("passwords not match");
+      } else {
+        this.register();
+      }
+    },
     register() {
-      auth
-        .register(this.name, this.username, this.email, this.password)
-        .then(() => {
-          this.$router.push("/login");
-        });
+      const user = {
+        name: this.name,
+        username: this.username,
+        password: this.password,
+        email: this.email
+      };
+      this.$store.dispatch("auth/register", user).then(hasAccount => {
+        //console.log(this.$store.getters.hasAccount);
+        if (hasAccount) {
+          console.log("has account!!");
+          this.$router.push("login");
+        }
+      });
     }
   }
 };

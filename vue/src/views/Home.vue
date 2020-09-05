@@ -53,7 +53,7 @@
 
 <script>
 // @ is an alias to /src
-import auth from "@/services/authService";
+
 import list from "@/components/ListFrames";
 import content from "@/services/contentService";
 
@@ -68,7 +68,7 @@ export default {
   components: { list },
   methods: {
     logout() {
-      auth.logout();
+      this.$store.dispatch("logout");
     },
     init() {
       console.log("init()!!!!");

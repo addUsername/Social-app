@@ -1,9 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-//import Home from "../views/Home.vue";
-//import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
-//import About from "../views/About.vue";
 import store from "@/store";
 
 Vue.use(VueRouter);
@@ -45,21 +42,7 @@ const router = new VueRouter({
   mode: "history",
   routes
 });
-/*
-//Aqui comprobaremos del local storage si el user esta loggeado.. parece debil esto xd
-router.beforeEach((to, from, next) => {
-  console.log("router beforeEach");
-  const publicPages = ["/login", "/register"];
-  const authRequired = !publicPages.includes(to.path);
-  const loggedIn = localStorage.getItem("user");
-  console.log(localStorage.getItem("user"));
-  if (authRequired && !loggedIn) {
-    localStorage.getItem("not logged in, next login")
-    return next("/login");
-  }
-  next();
-});
-*/
+
 router.beforeEach((to, from, next) => {
   const publicPages = ["/login", "/register"];
   const authRequired = !publicPages.includes(to.path);
@@ -67,10 +50,7 @@ router.beforeEach((to, from, next) => {
   console.log(authRequired);
   if (authRequired) {
     //if(checktoken())
-    console.log("is logged??");
-    console.log(store.getters.isLogged);
-    console.log(store.getters.user);
-    if (store.getters.isLogged) {
+    if (store.getters["auth/isLogged"]) {
       console.log("There is a token, resume. (" + to.path + ")");
       next();
     } else {
@@ -78,19 +58,9 @@ router.beforeEach((to, from, next) => {
       next("login");
     }
   } else {
-    console.log("You're on the login page");
+    console.log("You're on the login/register page");
     next(); // This is where it should have been
   }
 });
-// esta es la funcion que debemos cambiar.. para ello miramos si la variable isAuth es true from vuex
-/*
-function checkToken() {
-  if (localStorage.getItem("user")) {
-    console.log("Check token truee");
-    return true;
-  }
-  console.log("Check token false");
-  return false;
-}
-*/
+
 export default router;

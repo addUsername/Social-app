@@ -5,10 +5,15 @@ const ENDPOINT_PATH = "http://localhost:8080/api/auth/";
 export default {
   register(user) {
     //const user = { name, username, email, password };
-
-    axios
+    console.log("hi from register service");
+    console.log(user);
+    return axios
       .post(ENDPOINT_PATH + "new", user)
-      .then(() => {})
+      .then(response => {
+        console.log(response.data);
+        console.log(response.status);
+        return response;
+      })
       .catch(error => {
         throw new Error(`API ${error}`);
       });
