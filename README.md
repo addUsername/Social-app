@@ -27,6 +27,9 @@ More Spring boot-Vue in a social like app with Security and multimedia Content
 - Add axios store
 - UserService and ContentService are now in charge to request only to its own RestController
 - Divided store in several files
+- Add Thumbnail workable vue component
+- Fixed bugs while resizing on server side
+- Implement profile pic and description on both sides
 - Several fixies
   
 
