@@ -5,7 +5,9 @@
        -->
     <v-app-bar color="primary" dense dark>
       <v-app-bar-nav></v-app-bar-nav>
-      <v-toolbar-title>Page title</v-toolbar-title>
+      <v-toolbar-title>{{
+        $store.getters["content/home"].username
+      }}</v-toolbar-title>
       <v-spacer></v-spacer>
 
       <router-link to="/login">
@@ -28,20 +30,10 @@
 </template>
 
 <script>
-//import Login from "@/views/Login";
-//import Register from "@/views/Register";
-
 export default {
   name: "App",
-
-  components: {
-    //Login,
-    //Register
-  },
-
-  data: () => ({
-    //
-  })
+  components: {},
+  data: () => {}
 };
 </script>
 <style></style>

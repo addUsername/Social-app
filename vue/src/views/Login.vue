@@ -71,7 +71,7 @@ export default {
       const user = { username: this.username, password: this.password };
       this.$store.dispatch("auth/login", user).then(() => {
         //console.log(this.$store.getters.isLogged);
-        if (this.$store.getters.["auth/isLogged"]) {
+        if (this.$store.getters["auth/isLogged"]) {
           //this.$router.push("/home/" + this.$store.getters.user.username)
           //esto es para test
           console.log("is logged!!");

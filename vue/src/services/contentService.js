@@ -7,18 +7,19 @@ the api calls for a content type (e.g. users) and exposes methods for performing
 I like wrapping http calls and implementation details in a services layer, it provides a clean separation of concerns and simplifies the vuex modules that use the services.
 */
 import axios from "axios";
+import store from "@/store";
 
 const ENDPOINT_PATH = "http://localhost:8080/api/media/";
 
 export default {
   getUserFrontPage(username) {
     const user = { username: username };
+    console.log("getuserfrontpage");
+    console.log(store.getters["auth/user"].token);
     return axios
       .get(ENDPOINT_PATH + "home/" + user.username, {
         headers: {
-          Authorization: `Bearer ${
-            JSON.parse(localStorage.getItem("user")).token
-          }`
+          Authorization: `Bearer ${store.getters["auth/user"].token}`
         }
       })
       .catch(error => {
@@ -34,9 +35,8 @@ export default {
       responseType: "blob",
       type: "image/jpg",
       headers: {
-        Authorization: `Bearer ${
-          JSON.parse(localStorage.getItem("user")).token
-        }`
+        //JSON.parse(localStorage.getItem("user")).token
+        Authorization: `Bearer ${store.getters["auth/user"].token}`
       }
     });
   },
@@ -46,9 +46,7 @@ export default {
       responseType: "blob",
       type: "image/png",
       headers: {
-        Authorization: `Bearer ${
-          JSON.parse(localStorage.getItem("user")).token
-        }`
+        Authorization: `Bearer ${store.getters["auth/user"].token}`
       }
     });
   }
