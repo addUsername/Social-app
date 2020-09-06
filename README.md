@@ -48,9 +48,18 @@ More Spring boot-Vue in a social like app with Security and multimedia Content
 - ~~Deploy prototype api, write test~~
 - ~~Response code and exception handling~~
 - ~~Read about asynchronous and see how to include it if suits are meet~~
-- Go deeper on Postman
+- Go deeper on Postman (almost finish.. see how to automatize and print cool results)
 - ~~Start with Vue.js~~
-
+- frame content: ui design (v-dialog wrapping v-card like in home component, social thing and messages, def data needed to retrieve from api
+- <video> thing, please be simple 
+- user sidebar (this will need more endopoints (for both authController/authService, to CRUD user info))
+- implement following actions, accept/cancel requests
+- pm thing, last thing, super simple
+- create  and edit support for frames (back already supports this)
+- finish back, whatever it takes, dockerize and see heroku
+- mock back and try to deploy front as static app
+- DON¨T FORGET VALIDATORS ON FORMS
+  
 ## Then
 - ~~Complete entity classes and RestController for Spring~~
 - ~~Complete Router for Vue~~
@@ -58,7 +67,7 @@ More Spring boot-Vue in a social like app with Security and multimedia Content
 - Design test interface set up for both (reading about)
 - ~~Test api with Postman and save jsons (Deploy static front) (reading about)~~
 - Test static and dinamic(real Spring connection) for login in selenium
-- See how to doc
+- See how to doc (a little bit)
 
 ## One day..
 - Multimedia thing (almost done!)
