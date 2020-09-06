@@ -7,11 +7,11 @@ const content = {
       username: "",
       bigImg: "",
       imgs: [],
-      frames: {},
+      frames: [],
       text: ""
     },
     img: "",
-    thumbnails: []
+    thumbFrame: []
   },
   mutations: {
     //Modify objects, keep simple as setter should be bc things
@@ -23,25 +23,29 @@ const content = {
       state.img = img;
       console.log("saving img");
     },
-    //Unused
+    //Unused by now
     DEL_HOME(state) {
       state.user = null;
       console.log("deleting user");
     },
-    SAVE_THUMBNAIL(state, thumbnail) {
-      state.thumbnails.push(thumbnail);
-      console.log("append thumbnail");
+    DEL_THUMBFRAME(state) {
+      state.thumbFrame = null;
+      console.log("deleting user");
+    },
+    SAVE_THUMBFRAME(state, pair) {
+      state.thumbFrame.push(pair);
+      console.log("append thumbframe");
     }
   },
   getters: {
-    //Notice how getters is an object. user is a property of this object,
+    // Notice how getters is an object. user is a property of this object,
     // which accepts the state as the parameter, and returns the user property of the state.
     home: state => state.home,
     img: state => state.img,
-    thumbnails: state => state.thumbnails
+    thumbFrame: state => state.thumbFrame
   },
   actions: {
-    //Api calls here, actions are meant to be async while mutations should happen as near to instantly as possible.
+    // Api calls here, actions are meant to be async while mutations should happen as near to instantly as possible.
     getUserFrontPage({ commit }, username) {
       return contentService.getUserFrontPage(username).then(response => {
         console.log(response.data);
@@ -60,28 +64,30 @@ const content = {
     },
     getBigImg({ commit, state }) {
       return contentService
-        .getBigImg(
-          //getters["content/home"].bigImg,
-          //getters["content/home"].username
-          state.home.bigImg,
-          state.home.username
-        )
+        .getBigImg(state.home.bigImg, state.home.username)
         .then(response => {
-          // this.bigImgUrl = Buffer.from(response.data, "binary").toString("base64" );
           var url = URL.createObjectURL(new Blob([response.data]));
           commit("SAVE_IMG", url);
           return url;
         });
     },
     getThumbnails({ commit, state }) {
-      state.home.imgs.forEach(thumbnail => {
+      state.home.imgs.forEach((thumbnail, i) => {
         contentService
           .getThumbImg(thumbnail, state.home.username)
           .then(response => {
             var url = URL.createObjectURL(new Blob([response.data]));
-            commit("SAVE_THUMBNAIL", url);
+            commit("SAVE_THUMBFRAME", {
+              key: state.home.frames[i],
+              value: url
+            });
+            console.log({
+              key: state.home.frames[i],
+              value: url
+            });
           });
       });
+      console.log(state.thumbFrame);
       return;
     }
   }

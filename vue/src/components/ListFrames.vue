@@ -2,14 +2,16 @@
   <v-app>
     <v-container>
       <v-row>
-        <v-col v-for="(frame, index) in myValue" :key="index">
+        <v-col v-for="(pair, index) in getData" :key="index">
           <v-card class="mx-auto">
             <v-img
               class="white--text align-end"
-              v-bind:src="frame"
+              v-bind:src="pair.value"
               align="right"
               max-width="400"
             />
+            <p>{{ pair }}</p>
+            <p>{{ pair["value"] }}</p>
           </v-card>
         </v-col>
       </v-row>
@@ -18,21 +20,18 @@
 </template>
 
 <script>
-//import content from "@/services/contentService";
-
 export default {
   name: "listFrames",
-  data: () => ({
-    frames: []
-  }),
   computed: {
-  myValue() { return this.$store.getters["content/thumbnails"] }
+    getData() {
+      console.log("get data from listFrames");
+      return this.$store.getters["content/thumbFrame"];
+    }
   },
   methods: {
     init() {
       console.log("iniit Lisst");
-      this.frames = this.$store.getters["content/thumbnails"];
-      console.log(this.frames);
+      //this.frames = this.$store.getters["content/thumbnails"];
     }
   },
   mounted() {
