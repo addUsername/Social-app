@@ -31,7 +31,7 @@ More Spring boot-Vue in a social like app with Security and multimedia Content
 - Fixed bugs while resizing on server side
 - Implement profile pic and description on both sides
 - Several fixies
-  
+- SonarQube and lighthouse for code audit
 
 ## TODO
 - ~~Set requeriments, identify dependencies for both~~ 
