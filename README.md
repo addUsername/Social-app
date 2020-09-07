@@ -31,7 +31,6 @@ More Spring boot-Vue in a social like app with Security and multimedia Content
 - Fixed bugs while resizing on server side
 - Implement profile pic and description on both sides
 - Several fixies
-- SonarQube and lighthouse for code audit
 
 ## TODO
 - ~~Set requeriments, identify dependencies for both~~ 
@@ -59,6 +58,7 @@ More Spring boot-Vue in a social like app with Security and multimedia Content
 - finish back, whatever it takes, dockerize and see heroku
 - mock back and try to deploy front as static app
 - DON¨T FORGET VALIDATORS ON FORMS
+- SonarQube and lighthouse for code audit
   
 ## Then
 - ~~Complete entity classes and RestController for Spring~~
