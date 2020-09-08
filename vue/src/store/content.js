@@ -4,14 +4,17 @@ const content = {
   namespaced: true,
   state: {
     home: {
+      // @DOC
       username: "",
       bigImg: "",
       imgs: [],
       frames: [],
-      text: ""
+      text: "",
+      likes: []
     },
     img: "",
-    thumbFrame: []
+    thumbFrame: [],
+    overlay: false
   },
   mutations: {
     //Modify objects, keep simple as setter should be bc things
@@ -35,6 +38,12 @@ const content = {
     SAVE_THUMBFRAME(state, pair) {
       state.thumbFrame.push(pair);
       console.log("append thumbframe");
+    },
+    CHANGE_OVERLAY(state) {
+      state.overlay = !state.overlay;
+    },
+    FALSE_OVERLAY(state) {
+      state.overlay = false;
     }
   },
   getters: {
@@ -42,7 +51,8 @@ const content = {
     // which accepts the state as the parameter, and returns the user property of the state.
     home: state => state.home,
     img: state => state.img,
-    thumbFrame: state => state.thumbFrame
+    thumbFrame: state => state.thumbFrame,
+    overlay: state => state.overlay
   },
   actions: {
     // Api calls here, actions are meant to be async while mutations should happen as near to instantly as possible.
@@ -55,7 +65,8 @@ const content = {
             bigImg: response.data.img,
             imgs: response.data.imgs,
             frames: response.data.idFrame,
-            text: response.data.text
+            text: response.data.text,
+            likes: response.data.likes
           };
           console.log(home);
           commit("SAVE_HOME", home);
@@ -79,15 +90,20 @@ const content = {
             var url = URL.createObjectURL(new Blob([response.data]));
             commit("SAVE_THUMBFRAME", {
               key: state.home.frames[i],
-              value: url
-            });
-            console.log({
-              key: state.home.frames[i],
-              value: url
+              value: url,
+              like: state.home.likes[i]
             });
           });
       });
-      console.log(state.thumbFrame);
+      return;
+    },
+
+    changeOverlay({ commit }) {
+      commit("CHANGE_OVERLAY");
+      return;
+    },
+    setOverlayFalse({ commit }) {
+      commit("FALSE_OVERLAY");
       return;
     }
   }

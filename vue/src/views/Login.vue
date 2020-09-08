@@ -24,6 +24,7 @@
                     prepend-icon="mdi-account"
                     type="text"
                     :rules="['Required']"
+                    hint="At least 8 characters"
                     v-model="username"
                   ></v-text-field>
                   <p>login check: {{ $store.getters.isLogged }}</p>
