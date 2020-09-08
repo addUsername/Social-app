@@ -30,6 +30,9 @@ More Spring boot-Vue in a social like app with Security and multimedia Content
 - Add Thumbnail workable vue component
 - Fixed bugs while resizing on server side
 - Implement profile pic and description on both sides
+- Add Frame and Message components
+- Add endpoints for frame and menssages
+- Implemented new components on vue project
 - Several fixies
 
 ## TODO
