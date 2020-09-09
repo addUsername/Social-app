@@ -27,8 +27,7 @@ public class Comment {
 	@CreationTimestamp
 	private Date date;
 	//private Date date; //o string..
-	public Comment(@NotBlank String text) {
-		this.text = text;
-	}
+	private int likes;
+	private String username;
 	
 }

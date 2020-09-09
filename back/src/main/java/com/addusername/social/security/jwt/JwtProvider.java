@@ -29,14 +29,19 @@ public class JwtProvider {
     @Value("${jwt.expiration}")
     private int expiration;
     
+    //@See https://vuejsdevelopers.com/2019/04/15/api-security-jwt-json-web-tokens/
     public String generateToken(Authentication auth) {
     	MyUserDetails myuser = (MyUserDetails) auth.getPrincipal();
     	
     	
+    	/*
+    	 * It's important to note that the payload is not secure. Anyone can decode the token and see exactly what's in the payload. 
+    	 * For that reason, we usually include an ID rather than sensitive identifying information like the user's email.
+    	 */
     	return Jwts.builder().setSubject(myuser.getUsername())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(new Date().getTime() + expiration * 1000))
-                .signWith(SignatureAlgorithm.HS512, secret)
+                .signWith(SignatureAlgorithm.HS512, secret) //hashing algorithms
                 .compact();
     }
     

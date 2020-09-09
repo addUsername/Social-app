@@ -66,9 +66,9 @@ public class AuthController {
 	        new Client(nuevoUsuario.getName(), nuevoUsuario.getUsername(), nuevoUsuario.getEmail(),
 	                passwordEncoder.encode(nuevoUsuario.getPassword()));
 	
-	Set<String> rolesStr = nuevoUsuario.getRoles();
 	Set<Rol> roles = new HashSet<>();
-	for (String rol : rolesStr) {
+	//admin user should be set muanually for another admin IMPLEMENT THESE¿?
+	String rol = "";
 	    switch (rol) {
 	        case "admin":
 	        	//Rol rolAdmin = new Rol(RolName.ROLE_ADMIN);
@@ -79,7 +79,7 @@ public class AuthController {
 	            Rol rolUser = rolService.getByRolName(RolName.ROLE_USER).get();
 	            roles.add(rolUser);
 	    }
-	}
+	
     usuario.setRoles(roles);
     clientService.save(usuario);
     

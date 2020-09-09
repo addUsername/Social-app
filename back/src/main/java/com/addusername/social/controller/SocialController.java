@@ -9,15 +9,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.addusername.social.dto.CommentDTO;
 import com.addusername.social.dto.Message;
 import com.addusername.social.entities.content.Content;
 import com.addusername.social.entities.content.FollowRequest;
 import com.addusername.social.entities.content.Frame;
+
 //SACAR TODO LO QUE SE PUEDA DE AQUI... EL CONTROLER no debe contener mucha logica
 import com.addusername.social.repository.FollowRepository;
 import com.addusername.social.security.MyUserDetails;
@@ -125,6 +128,26 @@ public class SocialController {
 		frame.getMedia().addLike();
 		frameService.save(frame);
 		return new ResponseEntity(new Message("liked"), HttpStatus.ACCEPTED);
+	}
+	@PostMapping(value = "{username}/addComment", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('USER')")
+	public ResponseEntity<?> setLike(@PathVariable(value = "username") String username,
+									@RequestBody CommentDTO comment){
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		MyUserDetails user = ((MyUserDetails) auth.getPrincipal());
+		List <Content> friends = contentService.findByUsername(username).get().getFriend_ids();		
+		Boolean isFriend = false;
+		if(user.getUsername().equalsIgnoreCase(username)) {
+			isFriend = true;
+		}else {
+			isFriend = friends.stream()
+				.map(Content::getId)
+				.anyMatch(id -> id == user.getId());			
+		}		
+		if(!isFriend ) return new ResponseEntity(new Message("u are not "+username+ " friend :("), HttpStatus.BAD_REQUEST);
+		
+		return new ResponseEntity(new Message(frameService.setComment(comment)), HttpStatus.BAD_REQUEST);
 	}
 	
 	/*

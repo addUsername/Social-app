@@ -83,8 +83,7 @@ public class MediaController {
 				.anyMatch(id -> id == user.getId());			
 		}		
 		if(!isFriend ) return new ResponseEntity(new Message("u are not "+username+ " friend :("), HttpStatus.BAD_REQUEST);
-		
-		
+				
 		//LOGIC HERE
 		//Miniaturas, img ppal, followers¿?
 		Home home = contentService.getHome(username);
@@ -117,6 +116,30 @@ public class MediaController {
 		    );
 		
 	}
+	@GetMapping(value = "/frame/{id:.+}/{username}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('USER')")
+	public ResponseEntity<?> getFrame(@PathVariable(value = "username") String username,
+										@PathVariable(value = "id") String idFrame,
+										HttpServletResponse response){
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		MyUserDetails user = ((MyUserDetails) auth.getPrincipal());
+		List <Content> friends = contentService.findByUsername(username).get().getFriend_ids();		
+		Boolean isFriend = false;
+		if(user.getUsername().equalsIgnoreCase(username)) {
+			isFriend = true;
+		}else {
+			isFriend = friends.stream()
+				.map(Content::getId)
+				.anyMatch(id -> id == user.getId());			
+		}		
+		if(!isFriend ) return new ResponseEntity(new Message("u are not "+username+ " friend :("), HttpStatus.BAD_REQUEST);
+		
+		//LOGIC HERE
+		FrameDTO frame = frameService.getFrame(username, Long.parseLong(idFrame));
+		return new ResponseEntity<FrameDTO>(frame, HttpStatus.OK);
+	}
+	
 	@GetMapping(value = "/home/big/{id:.+}/{username}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('USER')")
 	public ResponseEntity<?> getBigFile(@PathVariable(value = "username") String username,

@@ -14,5 +14,6 @@ public class FrameDTO {
 	private Long media_id;
 	private List<Comment> comments;
 	private String text;
-
+	private String mediaType;
+	private int likes;
 }

@@ -50,6 +50,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 		// TODO Auto-generated method stub
 		return super.authenticationManagerBean();
 	}
+	//DPM!! CORS SOLUCIONADAS, MIRAR BIEN COMO Y PORQUE
+	//https://stackoverflow.com/a/59306983/13771772
 	@Bean
 	CorsConfigurationSource corsConfigurationSource() {
 	    CorsConfiguration configuration = new CorsConfiguration();

@@ -36,8 +36,8 @@ public class StorageMediaService {
 	//Create a Service class to store and download files on the server, and to store information in the database.
 	//we should pick up this from application.propetes
 	private String uploadLocation = "src/main/resources/static/media/upload";
-	private int MiniImageHeight = 500;
-	private int MiniImageWidth = 1000;
+	private final int MiniImageHeight = 400;
+	private final int MiniImageWidth = 400;
 	
 	//Change to service.. see services vs repositories
 	@Autowired
@@ -145,10 +145,10 @@ public class StorageMediaService {
 			}else {
 				inputImage = ImageIO.read(file);
 			}
-			// creates output image
-	        BufferedImage outputImage = new BufferedImage(200,200, inputImage.getType());
+			// creates output image, size 200x200, prob we should put this values as constant outside
+	        BufferedImage outputImage = new BufferedImage(MiniImageWidth, MiniImageHeight, inputImage.getType());
 	 
-	        // scales the input image to the output image
+	        // scales the input image to the output image, wii
 	        Graphics2D g2d = outputImage.createGraphics();
 	        g2d.drawImage(inputImage, 0, 0, outputImage.getWidth(), outputImage.getHeight(), null);
 	        g2d.dispose();

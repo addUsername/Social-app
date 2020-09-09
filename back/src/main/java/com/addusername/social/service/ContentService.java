@@ -41,7 +41,7 @@ public class ContentService {
 	}
 	
 	public Home getHome(String username) {
-		//Home is just the first frame entered.. lel
+		//Home is just the first frame entered.. lel.. good enough
 		Content content = repo.findByUsername(username).get();
 		
 		Home toReturn = new Home();
@@ -50,8 +50,14 @@ public class ContentService {
 				.map(Frame::getId)
 				.collect(Collectors.toList())				
 				);
-		toReturn.setImg(content.getFrames().get(0).getMedia().getId().toString());
+		toReturn.setImg(content.getFrames().get(0).getMedia().getId().toString());		
 		toReturn.setText(content.getFrames().get(0).getText());
+		
+		toReturn.setLikes(content.getFrames().stream()
+				.map(frame -> frame.getMedia().getLikes())
+				.collect(Collectors.toList())
+				);
+		
 		toReturn.setImgs(content.getFrames().stream()
 				.map(frame -> frame.getMedia().getId().toString())
 				.collect(Collectors.toList())
@@ -59,6 +65,5 @@ public class ContentService {
 		
 		return toReturn;
 	}
-	
 
 }

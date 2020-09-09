@@ -12,6 +12,8 @@ public class Home {
 	private String img;
 	private List<String> imgs;
 	private List<Long> idFrame;
+	private String text;
+	private List<Integer> likes;
 	//private List<Resource> imgs;
 	
 }
