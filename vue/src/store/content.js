@@ -13,8 +13,7 @@ const content = {
       likes: []
     },
     img: "",
-    thumbFrame: [],
-    overlay: false
+    thumbFrame: []
   },
   mutations: {
     //Modify objects, keep simple as setter should be bc things
@@ -38,12 +37,6 @@ const content = {
     SAVE_THUMBFRAME(state, pair) {
       state.thumbFrame.push(pair);
       console.log("append thumbframe");
-    },
-    CHANGE_OVERLAY(state) {
-      state.overlay = !state.overlay;
-    },
-    FALSE_OVERLAY(state) {
-      state.overlay = false;
     }
   },
   getters: {
@@ -51,8 +44,7 @@ const content = {
     // which accepts the state as the parameter, and returns the user property of the state.
     home: state => state.home,
     img: state => state.img,
-    thumbFrame: state => state.thumbFrame,
-    overlay: state => state.overlay
+    thumbFrame: state => state.thumbFrame
   },
   actions: {
     // Api calls here, actions are meant to be async while mutations should happen as near to instantly as possible.
@@ -95,15 +87,6 @@ const content = {
             });
           });
       });
-      return;
-    },
-
-    changeOverlay({ commit }) {
-      commit("CHANGE_OVERLAY");
-      return;
-    },
-    setOverlayFalse({ commit }) {
-      commit("FALSE_OVERLAY");
       return;
     }
   }
