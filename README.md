@@ -52,8 +52,9 @@ More Spring boot-Vue in a social like app with Security and multimedia Content
 - ~~Read about asynchronous and see how to include it if suits are meet~~
 - Go deeper on Postman (almost finish.. see how to automatize and print cool results)
 - ~~Start with Vue.js~~
-- frame content: ui design (v-dialog wrapping v-card like in home component, social thing and messages, def data needed to retrieve from api
-- <video> thing, please be simple 
+- ~~frame content: ui design (v-dialog wrapping v-card like in home component, social thing and messages, def data needed to retrieve from api
+- <video> thing, please be simple
+- code endpoints for menssages and video(maybe)
 - user sidebar (this will need more endopoints (for both authController/authService, to CRUD user info))
 - implement following actions, accept/cancel requests
 - pm thing, last thing, super simple
