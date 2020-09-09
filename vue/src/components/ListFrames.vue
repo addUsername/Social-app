@@ -20,13 +20,12 @@
           </v-card>
 
           <!-- aqui dentro va frame y message, ademas aqui hay que implementar el click outside-->
-          <v-overlay :value="getOverlay">
-            <v-btn icon @click="setOverlayFalse">
-              <v-icon>mdi-close</v-icon>
-            </v-btn>
-            <frame />
-          </v-overlay>
         </v-col>
+        <v-overlay :value="getOverlay">
+          <div class="pa-16">
+            <frame />
+          </div>
+        </v-overlay>
       </v-row>
     </v-container>
   </v-app>
@@ -49,9 +48,6 @@ export default {
     init() {
       console.log("iniit Lisst");
       //this.frames = this.$store.getters["content/thumbnails"];
-    },
-    setOverlayFalse() {
-      this.$store.dispatch("content/setOverlayFalse");
     },
     changeOverlay() {
       this.$store.dispatch("content/changeOverlay");
