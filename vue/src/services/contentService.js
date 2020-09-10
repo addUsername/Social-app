@@ -49,5 +49,17 @@ export default {
         Authorization: `Bearer ${store.getters["auth/user"].token}`
       }
     });
+  },
+  getFrame(obj) {
+    return axios.get(
+      ENDPOINT_PATH + "frame/" + obj.frameId + "/" + obj.username,
+      {
+        responseType: "blob",
+        type: "image/png",
+        headers: {
+          Authorization: `Bearer ${store.getters["auth/user"].token}`
+        }
+      }
+    );
   }
 };

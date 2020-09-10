@@ -77,14 +77,25 @@
 import message from "@/components/Message";
 export default {
   components: { message },
+  data() {
+    return {
+      idFrame: ""
+    };
+  },
   computed: {
-    messagesLength() {
-      //AQUI hay que llamar a la store nueva "post.js" y pillar el home ya, distinguir entre img/video (mñn)
-      //return this.$store.getters["post/getMenssagesLength"];
-      return 10;
+    getData() {
+      return this.$store.getters["content/frame"];
     }
   },
-  methods: {}
+  methods: {
+    init() {
+      this.idFrame = this.$store.getters["content/currentFrameId"];
+      this.$store.dispatch("content/getFrame", {
+        username: this.$route.params.username,
+        frameId: this.idFrame
+      });
+    }
+  }
 };
 </script>
 <style></style>

@@ -13,7 +13,15 @@ const content = {
       likes: []
     },
     img: "",
-    thumbFrame: []
+    thumbFrame: [],
+    currentFrameId: "",
+    frame: {
+      media_id: "",
+      comments: [],
+      text: "",
+      mediaType: "",
+      likes: ""
+    }
   },
   mutations: {
     //Modify objects, keep simple as setter should be bc things
@@ -37,6 +45,14 @@ const content = {
     SAVE_THUMBFRAME(state, pair) {
       state.thumbFrame.push(pair);
       console.log("append thumbframe");
+    },
+    SAVE_CURRENTFRAMEID(state, frameId) {
+      state.currentFrameId = frameId;
+      console.log("setting current frame");
+    },
+    SAVE_FRAME(state, frame) {
+      state.frame = frame;
+      console.log("frame");
     }
   },
   getters: {
@@ -44,7 +60,9 @@ const content = {
     // which accepts the state as the parameter, and returns the user property of the state.
     home: state => state.home,
     img: state => state.img,
-    thumbFrame: state => state.thumbFrame
+    thumbFrame: state => state.thumbFrame,
+    frame: state => state.frame,
+    currentFrameId: state => state.currentFrameId
   },
   actions: {
     // Api calls here, actions are meant to be async while mutations should happen as near to instantly as possible.
@@ -88,6 +106,15 @@ const content = {
           });
       });
       return;
+    },
+    getFrame({ commit }, obj) {
+      contentService.getFrame(obj).then(response => {
+        commit("SAVE_FRAME", response.data);
+      });
+      return;
+    },
+    setFrameId({ commit }, frameId) {
+      commit("SAVE_CURRENTFRAMEID", frameId);
     }
   }
 };
