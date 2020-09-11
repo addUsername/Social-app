@@ -33,6 +33,7 @@ More Spring boot-Vue in a social like app with Security and multimedia Content
 - Add Frame and Message components
 - Add endpoints for frame and menssages
 - Implemented new components on vue project
+- Vue now reproduce video nicely
 - Several fixies
 
 ## TODO
@@ -53,13 +54,13 @@ More Spring boot-Vue in a social like app with Security and multimedia Content
 - Go deeper on Postman (almost finish.. see how to automatize and print cool results)
 - ~~Start with Vue.js~~
 - ~~frame content: ui design (v-dialog wrapping v-card like in home component, social thing and messages, def data needed to retrieve from api~~
-- display video thing, please be simple
+- ~~display video thing, please be simple~~
 - ~~code endpoints for menssages and video(maybe)~~
 - user sidebar (this will need more endopoints (for both authController/authService, to CRUD user info))
 - implement following actions, accept/cancel requests in front
 - pm thing, last thing, super simple
 - create  and edit support for frames (back already supports this)
-- finish back, whatever it takes, dockerize and see heroku
+- ~~finish back, whatever it takes~~, dockerize and see heroku
 - mock back and try to deploy front as static app
 - DON¨T FORGET VALIDATORS ON FORMS AND ENTITIES
 - SonarQube and lighthouse for code audit
@@ -74,7 +75,7 @@ More Spring boot-Vue in a social like app with Security and multimedia Content
 - See how to doc (a little bit)
 
 ## One day..
-- Multimedia thing (almost done!)
+- ~~Multimedia thing (almost done)~~
 - ~~Router (pretty easy, low or none @PathVariable)~~
 - ~~Make it pretty (no way..)~~ (in Vuetify we belive)
 - More tests, maybe automate things
