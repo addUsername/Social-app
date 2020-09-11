@@ -15,13 +15,15 @@ const content = {
     img: "",
     thumbFrame: [],
     currentFrameId: "",
+    currentBlob: "",
     frame: {
       media_id: "",
       comments: [],
       text: "",
       mediaType: "",
       likes: ""
-    }
+    },
+    isImg: ""
   },
   mutations: {
     //Modify objects, keep simple as setter should be bc things
@@ -52,7 +54,15 @@ const content = {
     },
     SAVE_FRAME(state, frame) {
       state.frame = frame;
-      console.log("frame");
+      console.log("saving frame");
+    },
+    SAVE_CURRENTBLOB(state, blob) {
+      state.currentBlob = blob;
+      console.log("saving current blob");
+    },
+    SAVE_ISIMG(state, boolean) {
+      state.isImg = boolean;
+      console.log("saving isimg");
     }
   },
   getters: {
@@ -62,7 +72,9 @@ const content = {
     img: state => state.img,
     thumbFrame: state => state.thumbFrame,
     frame: state => state.frame,
-    currentFrameId: state => state.currentFrameId
+    currentFrameId: state => state.currentFrameId,
+    currentBlob: state => state.currentBlob,
+    isImg: state => state.isImg
   },
   actions: {
     // Api calls here, actions are meant to be async while mutations should happen as near to instantly as possible.
@@ -84,11 +96,29 @@ const content = {
       });
     },
     getBigImg({ commit, state }) {
+      console.log("get big img");
       return contentService
-        .getBigImg(state.home.bigImg, state.home.username)
+        .getBigImg(state.home.bigImg, state.home.username, "image/jpg")
         .then(response => {
           var url = URL.createObjectURL(new Blob([response.data]));
           commit("SAVE_IMG", url);
+          return url;
+        });
+    },
+    getFrameBlob({ commit, state }) {
+      console.log("Get frame blob");
+      console.log(state.frame.mediaType);
+      return contentService
+        .getBigImg(
+          state.currentFrameId,
+          state.home.username,
+          state.frame.mediaType
+        )
+        .then(response => {
+          var url = URL.createObjectURL(
+            new Blob([response.data], { type: state.frame.mediaType })
+          );
+          commit("SAVE_CURRENTBLOB", url);
           return url;
         });
     },
@@ -108,8 +138,16 @@ const content = {
       return;
     },
     getFrame({ commit }, obj) {
+      console.log(obj);
       contentService.getFrame(obj).then(response => {
         commit("SAVE_FRAME", response.data);
+        // should be === "image/jpg"
+        if (response.data.mediaType === "image/jpg") {
+          commit("SAVE_ISIMG", true);
+        } else {
+          //is video/mp4
+          commit("SAVE_ISIMG", false);
+        }
       });
       return;
     },

@@ -29,11 +29,11 @@ export default {
       });
     //this.$router.push("/");
   },
-  getBigImg(imgID, username) {
+  getBigImg(imgID, username, type) {
     console.log("making request get");
+    console.log(type)
     return axios.get(ENDPOINT_PATH + "home/big/" + imgID + "/" + username, {
       responseType: "blob",
-      type: "image/jpg",
       headers: {
         //JSON.parse(localStorage.getItem("user")).token
         Authorization: `Bearer ${store.getters["auth/user"].token}`
@@ -44,6 +44,7 @@ export default {
     console.log("making request get");
     return axios.get(ENDPOINT_PATH + "home/" + imgID + "/" + username, {
       responseType: "blob",
+      //mirar aqui, tenemos que pasarle el type video o png
       type: "image/png",
       headers: {
         Authorization: `Bearer ${store.getters["auth/user"].token}`
@@ -51,11 +52,10 @@ export default {
     });
   },
   getFrame(obj) {
+    console.log("getting frame");
     return axios.get(
       ENDPOINT_PATH + "frame/" + obj.frameId + "/" + obj.username,
       {
-        responseType: "blob",
-        type: "image/png",
         headers: {
           Authorization: `Bearer ${store.getters["auth/user"].token}`
         }

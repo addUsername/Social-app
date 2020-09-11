@@ -39,25 +39,39 @@ export default {
   components: { frame },
   data() {
     return {
-      dialog: ""
+      dialog: false
     };
   },
   computed: {
     getData() {
       return this.$store.getters["content/thumbFrame"];
+    },
+    getDialog() {
+      return this.dialog;
     }
   },
   methods: {
     init() {
       console.log("iniit Lisst");
-      this.dialog = false;
+      this.dialog = true;
       //this.frames = this.$store.getters["content/thumbnails"];
     },
     setFrameId(frameId) {
       this.$store.dispatch("content/setFrameId", frameId);
+      this.getFrame();
+    },
+    getFrame() {
+      this.$store
+        .dispatch("content/getFrame", {
+          username: this.$route.params.username,
+          frameId: this.$store.getters["content/currentFrameId"]
+        })
+        .then(() => {
+          this.$store.dispatch("content/getFrameBlob");
+        });
     }
   },
-  mounted() {
+  created() {
     this.init();
   }
 };
