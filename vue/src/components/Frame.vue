@@ -14,16 +14,14 @@
             >
               <v-chip class="ma-2" color="pink" outlined>
                 <v-icon dark>mdi-heart</v-icon>
-                {{ getLikes }}
+                {{ frame.likes }}
               </v-chip>
             </v-img>
           </div>
           <div v-else>
-            {{ "is viddeeo" }}
-            <video controls>
-              {{ getBLOB }}
+            <video>
               <source v-bind:src="getBLOB" type="video/mp4" />
-              Your browser does not support the video tag.
+              Your browser does not support the
             </video>
           </div>
         </v-col>
@@ -32,7 +30,7 @@
           <div>
             <v-card flat>
               <v-row
-                ><p class="font-weight-light ma-6">{{ getText }}</p></v-row
+                ><p class="font-weight-light ma-6">{{ frame.text }}</p></v-row
               >
               <v-row>
                 <v-form>
@@ -45,6 +43,18 @@
                     auto-grow
                   ></v-textarea>
                 </v-form>
+              </v-row>
+              <v-row class="d-flex align-end">
+                <v-btn @click.native="like" class="ma-2" outlined color="pink"
+                  ><v-icon dark>mdi-heart</v-icon></v-btn
+                >
+                <v-btn
+                  @click.native="follow"
+                  class="ma-2"
+                  outlined
+                  color="indigo"
+                  >Follow</v-btn
+                >
               </v-row>
             </v-card>
           </div>
@@ -71,30 +81,53 @@
 </template>
 <script>
 import message from "@/components/Message";
+import { mapGetters } from "vuex";
+
 export default {
   components: { message },
   data() {
     return {
       idFrame: "",
       likes: "",
-      text: ""
+      text: "",
+      input: ""
     };
   },
   computed: {
-    getText() {
-      return this.$store.getters["content/frame"].text;
+    ...mapGetters({
+      frame: "content/frame",
+      getBLOB: "content/currentBlob",
+      isImg: "content/isImg",
+      isFrameLoaded: "content/isFrameLoaded"
+    })
+  },
+  methods: {
+    like() {
+      console.log("LIKEDTO-----");
+      const likeDTO = {
+        objectId: this.$store.getters["content/currentFrameId"],
+        type: "frame"
+      };
+      console.log(likeDTO);
+      //const likeDTO = [this.$store.getters["content/currentFrameId"], "frame"];
+      this.$store.dispatch("social/like", likeDTO).then(() => {
+        //this.$forceUpdate();
+      });
     },
-    getLikes() {
-      return this.$store.getters["content/frame"].likes;
-    },
-    getBLOB() {
-      return this.$store.getters["content/currentBlob"];
-    },
-    isImg() {
-      return this.$store.getters["content/isImg"];
+    follow() {
+      //this.$route.params.username
+      this.$store.dispatch("social/follow", this.$route.params.username);
     }
   },
-  methods: {}
+  mounted() {
+    console.log("Frame mounteedddd");
+    //this.$forceUpdate();
+  }
 };
 </script>
-<style></style>
+<style>
+video {
+  max-width: 100%;
+  height: auto;
+}
+</style>

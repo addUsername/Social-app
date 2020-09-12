@@ -45,7 +45,9 @@
         </v-col>
       </v-row>
       <v-row>
-        <list />
+        <template v-if="childDataLoaded">
+          <list />
+        </template>
       </v-row>
     </v-container>
   </v-app>
@@ -62,12 +64,17 @@ export default {
     bigImgUrl: ""
   }),
   components: { list },
+  computed: {
+    childDataLoaded() {
+      return this.$store.getters["content/isThumbnailLoaded"];
+    }
+  },
   methods: {
     logout() {
       this.$store.dispatch("auth/logout");
     },
     init() {
-      console.log("init()!!!!");
+      console.log("init home!!!!");
       //Cogemos el username del path api/home/{username}
       this.$store
         .dispatch("content/getUserFrontPage", this.$route.params.username)

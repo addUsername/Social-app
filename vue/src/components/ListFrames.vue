@@ -39,7 +39,7 @@ export default {
   components: { frame },
   data() {
     return {
-      dialog: false
+      dialog: true
     };
   },
   computed: {
@@ -52,9 +52,7 @@ export default {
   },
   methods: {
     init() {
-      console.log("iniit Lisst");
-      this.dialog = true;
-      //this.frames = this.$store.getters["content/thumbnails"];
+      console.log("iniit Lisst ###################");
     },
     setFrameId(frameId) {
       this.$store.dispatch("content/setFrameId", frameId);
@@ -71,7 +69,7 @@ export default {
         });
     }
   },
-  created() {
+  mounted() {
     this.init();
   }
 };

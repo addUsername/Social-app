@@ -76,7 +76,7 @@ export default {
           //this.$router.push("/home/" + this.$store.getters.user.username)
           //esto es para test
           console.log("is logged!!");
-          this.$router.push("/home/" + "myTest");
+          this.$router.push("/home/" + this.username);
         }
       });
     }

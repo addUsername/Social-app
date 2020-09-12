@@ -23,7 +23,9 @@ const content = {
       mediaType: "",
       likes: ""
     },
-    isImg: ""
+    isImg: "",
+    isThumbnailLoaded: false,
+    ifFrameLoaded: false
   },
   mutations: {
     //Modify objects, keep simple as setter should be bc things
@@ -63,6 +65,14 @@ const content = {
     SAVE_ISIMG(state, boolean) {
       state.isImg = boolean;
       console.log("saving isimg");
+    },
+    SAVE_ISTHUMBNAILLOADED(state, boolean) {
+      state.isThumbnailLoaded = boolean;
+      console.log("Thumbnail loaded");
+    },
+    SAVE_ISFRAMELOADED(state, boolean) {
+      state.isFrameLoaded = boolean;
+      console.log("frame loaded");
     }
   },
   getters: {
@@ -74,13 +84,14 @@ const content = {
     frame: state => state.frame,
     currentFrameId: state => state.currentFrameId,
     currentBlob: state => state.currentBlob,
-    isImg: state => state.isImg
+    isImg: state => state.isImg,
+    isThumbnailLoaded: state => state.isThumbnailLoaded,
+    isFrameLoaded: state => state.isFrameLoaded
   },
   actions: {
     // Api calls here, actions are meant to be async while mutations should happen as near to instantly as possible.
     getUserFrontPage({ commit }, username) {
       return contentService.getUserFrontPage(username).then(response => {
-        console.log(response.data);
         if (response.status == 200) {
           var home = {
             username: username,
@@ -90,13 +101,11 @@ const content = {
             text: response.data.text,
             likes: response.data.likes
           };
-          console.log(home);
           commit("SAVE_HOME", home);
         }
       });
     },
     getBigImg({ commit, state }) {
-      console.log("get big img");
       return contentService
         .getBigImg(state.home.bigImg, state.home.username, "image/jpg")
         .then(response => {
@@ -107,7 +116,8 @@ const content = {
     },
     getFrameBlob({ commit, state }) {
       console.log("Get frame blob");
-      console.log(state.frame.mediaType);
+      console.log("ISFRAMELOADED FALSE!!!!!!!!!!!!!!!");
+      commit("SAVE_ISFRAMELOADED", false);
       return contentService
         .getBigImg(
           state.currentFrameId,
@@ -119,10 +129,15 @@ const content = {
             new Blob([response.data], { type: state.frame.mediaType })
           );
           commit("SAVE_CURRENTBLOB", url);
+          console.log("ISFRAMELOADED TRUEEE!!!!!!!!!!!!!!!");
+          if (state.frame.mediaType == "video/mp4") {
+            commit("SAVE_ISFRAMELOADED", true);
+          }
           return url;
         });
     },
     getThumbnails({ commit, state }) {
+      commit("SAVE_ISTHUMBNAILLOADED", false);
       state.home.imgs.forEach((thumbnail, i) => {
         contentService
           .getThumbImg(thumbnail, state.home.username)
@@ -133,12 +148,16 @@ const content = {
               value: url,
               like: state.home.likes[i]
             });
+            //Esto es muy cutre pero es la forma mas sencilla
+            if (state.thumbFrame.length == state.home.imgs.length) {
+              commit("SAVE_ISTHUMBNAILLOADED", true);
+            }
           });
       });
+      //ListFrames no cargara hasta que esto no termine.. cuanto antes lo pongamos a true mas rapido carga (aunq incompleto)
       return;
     },
     getFrame({ commit }, obj) {
-      console.log(obj);
       contentService.getFrame(obj).then(response => {
         commit("SAVE_FRAME", response.data);
         // should be === "image/jpg"

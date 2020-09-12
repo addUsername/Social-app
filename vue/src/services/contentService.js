@@ -31,7 +31,7 @@ export default {
   },
   getBigImg(imgID, username, type) {
     console.log("making request get");
-    console.log(type)
+    console.log(type);
     return axios.get(ENDPOINT_PATH + "home/big/" + imgID + "/" + username, {
       responseType: "blob",
       headers: {
