@@ -2,6 +2,7 @@ package com.addusername.social.controller;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.validation.Valid;
@@ -83,9 +84,13 @@ public class AuthController {
     usuario.setRoles(roles);
     clientService.save(usuario);
     
-    //Como no hemos relacionado el objeto Client con ContentClient, ahora tenemos que crear uno    
+    //Como no hemos relacionado el objeto Client con ContentClient, ahora tenemos que crear uno
+    // y añadirse asi mismo como amigo
     System.out.println(usuario.getUsername());
     Content newContent = new Content(usuario.getUsername(),new ArrayList<Content>(),new ArrayList<Frame>());
+    List<Content> myList = newContent.getFriend_ids();
+    myList.add(newContent);
+    newContent.setFriend_ids(myList);
     contentService.save(newContent);
     
     return new ResponseEntity(new Message("usuario guardado"), HttpStatus.CREATED);
