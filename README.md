@@ -37,6 +37,8 @@ More Spring boot-Vue in a social like app with Security and multimedia Content
 - Add theme, sidebar, tooltips
 - Add toggle dark/light theme
 - Create /Settings and /Upload routes
+- Add feedback to user on liking, following and commenting
+- Create userCard DTO object and component, to use while searching and viewing friends list
 - Several fixies
 
 ## TODO
