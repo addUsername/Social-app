@@ -1,16 +1,38 @@
 <template>
   <div class="container">
     <v-row fluid>
-      <v-col class="ma-0 pa-0 col-3" fluid v-for="index in 10" :key="index">
+      <v-col
+        class="ma-0 pa-0 col-3"
+        fluid
+        v-for="(comment, index) in comments"
+        :key="index"
+      >
         <v-card class="mx-auto primary" color="#26c6da" dark max-width="300">
           <v-card-text class="headline font-weight-bold body-2">
-            "Turns out semicolon-less style is easier and safer in TS because
-            most gotcha edge cases are type invalid as well."
+            {{ comment.text }}
           </v-card-text>
           <v-card-actions>
-            <span>Username</span>
-            <v-icon class="mr-1 left">mdi-heart</v-icon>
-            <span class="subheading mr-2">256</span>
+            <span>{{ comment.username }}</span>
+            <v-spacer></v-spacer>
+            <v-tooltip right>
+              <template v-slot:activator="{ on }">
+                <v-btn v-on="on" @click.native="like(comment.id)" text>
+                  <span class="subheading mr-2"
+                    >{{ comment.likes
+                    }}<v-icon class="ma-0 pa-0">mdi-heart</v-icon></span
+                  >
+                </v-btn>
+              </template>
+              Like!
+            </v-tooltip>
+
+            <div v-if="comment.edited">
+              <v-tooltip right>
+                <template v-slot:activator="{ on }">
+                  <v-icon v-on="on">mdi-barcode</v-icon></template
+                >{{ "Edited @: " + comment.date }}</v-tooltip
+              >
+            </div>
           </v-card-actions>
         </v-card>
       </v-col>
@@ -19,12 +41,25 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   computed: {
-    messagesLength() {
-      //AQUI hay que llamar a la store nueva "post.js" y pillar el home ya, distinguir entre img/video (mñn)
-      //return this.$store.getters["post/getMenssagesLength"];
-      return 10;
+    ...mapGetters({
+      comments: "content/comments"
+    })
+  },
+  methods: {
+    like(messageId) {
+      const likeDTO = {
+        objectId: messageId,
+        type: "message"
+      };
+      console.log(likeDTO);
+      //const likeDTO = [this.$store.getters["content/currentFrameId"], "frame"];
+      this.$store.dispatch("social/like", likeDTO).then(() => {
+        //this.$forceUpdate();
+      });
     }
   }
 };

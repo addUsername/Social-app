@@ -5,23 +5,17 @@
         <v-row align="center" justify="center">
           <v-col cols="12" sm="8" md="4">
             <v-card class="elevation-6">
-              <v-toolbar color="primary" dark flat>
+              <v-toolbar color="primary" flat>
                 <v-toolbar-title>Register form</v-toolbar-title>
                 <v-spacer></v-spacer>
-                <v-tooltip bottom>
-                  <template v-slot:activator="{ on }">
-                    <v-btn icon large target="_blank" v-on="on">
-                      <v-icon>mdi-code-tags</v-icon>
-                    </v-btn>
-                  </template>
-                </v-tooltip>
+                  <v-icon>mdi-code-tags</v-icon>
               </v-toolbar>
               <v-card-text>
                 <v-form @submit.prevent="check" id="connect-submit-btn-to form">
                   <v-text-field
                     label="User"
                     name="user"
-                    prepend-icon="mdi-user"
+                    prepend-icon="mdi-account"
                     type="text"
                     v-model="name"
                     :rules="['Required']"
@@ -29,7 +23,7 @@
                   <v-text-field
                     label="Username"
                     name="username"
-                    prepend-icon="mdi-user"
+                    prepend-icon="mdi-account"
                     type="text"
                     v-model="username"
                     :rules="['Required']"
@@ -70,6 +64,7 @@
                   form="connect-submit-btn-to form"
                   >Register</v-btn
                 >
+                <v-btn color="secundary" to="/login">LOG IN</v-btn>
               </v-card-actions>
             </v-card>
           </v-col>

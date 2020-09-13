@@ -1,6 +1,6 @@
 <template>
-  <v-app id="hii">
-    <v-container fluid>
+  <v-app>
+    <v-container fluid class="pa-5">
       <v-row no-gutters>
         <v-col cols="12">
           <v-card class="mx-auto">
@@ -28,8 +28,31 @@
               >you are {{ $store.getters["auth/user"].username }} <br />
               you likes:</v-card-subtitle
             >
-            <v-card-actions
-              ><v-btn @click.prevent="logout">Log out</v-btn>
+            <v-card-actions>
+              <v-tooltip top>
+                <template v-slot:activator="{ on }">
+                  <v-btn
+                    v-on="on"
+                    @click.native="like"
+                    class="ma-2"
+                    outlined
+                    color="pink"
+                    ><v-icon dark>mdi-heart</v-icon></v-btn
+                  ></template
+                >Like!</v-tooltip
+              >
+              <v-tooltip top>
+                <template v-slot:activator="{ on }">
+                  <v-btn
+                    v-on="on"
+                    @click.native="follow"
+                    class="ma-2"
+                    outlined
+                    color="indigo"
+                    >Follow</v-btn
+                  ></template
+                >Follow!</v-tooltip
+              >
             </v-card-actions>
           </v-card>
         </v-col>
@@ -57,6 +80,7 @@
 // @ is an alias to /src
 
 import list from "@/components/ListFrames";
+import { mapGetters } from "vuex";
 
 export default {
   name: "Home",
@@ -65,13 +89,23 @@ export default {
   }),
   components: { list },
   computed: {
-    childDataLoaded() {
-      return this.$store.getters["content/isThumbnailLoaded"];
-    }
+    ...mapGetters({
+      childDataLoaded: "content/isThumbnailLoaded",
+      isFrameLoaded: "content/isFrameLoaded"
+    })
   },
   methods: {
-    logout() {
-      this.$store.dispatch("auth/logout");
+    like() {
+      const likeDTO = {
+        objectId: this.$store.getters["content/"],
+        type: "frame"
+      };
+      this.$store.dispatch("social/like", likeDTO).then(() => {
+        //this.$forceUpdate();
+      });
+    },
+    follow() {
+      this.$store.dispatch("social/follow", this.$route.params.username);
     },
     init() {
       console.log("init home!!!!");

@@ -25,7 +25,7 @@ const content = {
     },
     isImg: "",
     isThumbnailLoaded: false,
-    ifFrameLoaded: false
+    ifFrameLoaded: true
   },
   mutations: {
     //Modify objects, keep simple as setter should be bc things
@@ -86,7 +86,8 @@ const content = {
     currentBlob: state => state.currentBlob,
     isImg: state => state.isImg,
     isThumbnailLoaded: state => state.isThumbnailLoaded,
-    isFrameLoaded: state => state.isFrameLoaded
+    isFrameLoaded: state => state.isFrameLoaded,
+    comments: state => state.frame.comments
   },
   actions: {
     // Api calls here, actions are meant to be async while mutations should happen as near to instantly as possible.
@@ -117,6 +118,7 @@ const content = {
     getFrameBlob({ commit, state }) {
       console.log("Get frame blob");
       console.log("ISFRAMELOADED FALSE!!!!!!!!!!!!!!!");
+      commit("SAVE_CURRENTBLOB", null);
       commit("SAVE_ISFRAMELOADED", false);
       return contentService
         .getBigImg(
@@ -129,11 +131,11 @@ const content = {
             new Blob([response.data], { type: state.frame.mediaType })
           );
           commit("SAVE_CURRENTBLOB", url);
-          console.log("ISFRAMELOADED TRUEEE!!!!!!!!!!!!!!!");
           if (state.frame.mediaType == "video/mp4") {
+            console.log("ISFRAMELOADED TRUEEE!!!!!!!!!!!!!!!");
             commit("SAVE_ISFRAMELOADED", true);
           }
-          return url;
+          //return url;
         });
     },
     getThumbnails({ commit, state }) {

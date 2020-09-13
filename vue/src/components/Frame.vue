@@ -19,10 +19,18 @@
             </v-img>
           </div>
           <div v-else>
-            <video>
-              <source v-bind:src="getBLOB" type="video/mp4" />
-              Your browser does not support the
-            </video>
+            <v-tooltip left nudge-left>
+              <template v-slot:activator="{ on }">
+                <video
+                  onclick="this.paused ? this.play() : this.pause();"
+                  :key="isFrameLoaded"
+                  v-on="on"
+                >
+                  <source v-bind:src="getBLOB" type="video/mp4" />
+                  Your browser does not support the
+                </video></template
+              >Click to play!</v-tooltip
+            >
           </div>
         </v-col>
 
@@ -34,26 +42,46 @@
               >
               <v-row>
                 <v-form>
-                  <v-textarea
-                    prepend-inner-icon="mdi-comment"
-                    class="mx-2"
-                    label="Comment"
-                    rows="1"
-                    v-model="input"
-                    auto-grow
-                  ></v-textarea>
+                  <v-tooltip right>
+                    <template v-slot:activator="{ on }">
+                      <v-textarea
+                        prepend-inner-icon="mdi-comment"
+                        class="mx-2"
+                        label="Comment"
+                        rows="1"
+                        v-model="input"
+                        v-on="on"
+                        auto-grow
+                      ></v-textarea> </template
+                    >Make a comment!</v-tooltip
+                  >
                 </v-form>
               </v-row>
               <v-row class="d-flex align-end">
-                <v-btn @click.native="like" class="ma-2" outlined color="pink"
-                  ><v-icon dark>mdi-heart</v-icon></v-btn
+                <v-tooltip right>
+                  <template v-slot:activator="{ on }">
+                    <v-btn
+                      @click.native="like"
+                      class="ma-2"
+                      outlined
+                      color="pink"
+                      v-on="on"
+                      ><v-icon dark>mdi-heart</v-icon></v-btn
+                    ></template
+                  >Like!</v-tooltip
                 >
-                <v-btn
-                  @click.native="follow"
-                  class="ma-2"
-                  outlined
-                  color="indigo"
-                  >Follow</v-btn
+
+                <v-tooltip right>
+                  <template v-slot:activator="{ on }">
+                    <v-btn
+                      @click.native="follow"
+                      class="ma-2"
+                      outlined
+                      color="indigo"
+                      v-on="on"
+                      >Follow</v-btn
+                    ></template
+                  >Follow!</v-tooltip
                 >
               </v-row>
             </v-card>
@@ -63,13 +91,22 @@
       <v-row>
         <v-expansion-panels hover popout flat>
           <v-expansion-panel>
-            <v-expansion-panel-header>
-              <v-badge color="primary" content="99" left overlap>
-                <v-icon color="primary" large>
-                  mdi-email
-                </v-icon>
-              </v-badge>
-            </v-expansion-panel-header>
+            <v-tooltip top>
+              <template v-slot:activator="{ on }">
+                <v-expansion-panel-header v-on="on">
+                  <v-badge
+                    color="primary"
+                    v-bind:content="comments.length"
+                    left
+                    overlap
+                  >
+                    <v-icon color="primary" large>
+                      mdi-email
+                    </v-icon>
+                  </v-badge>
+                </v-expansion-panel-header></template
+              >Show Messages!</v-tooltip
+            >
             <v-expansion-panel-content>
               <message />
             </v-expansion-panel-content>
@@ -90,7 +127,7 @@ export default {
       idFrame: "",
       likes: "",
       text: "",
-      input: ""
+      input: "hehhe"
     };
   },
   computed: {
@@ -98,12 +135,13 @@ export default {
       frame: "content/frame",
       getBLOB: "content/currentBlob",
       isImg: "content/isImg",
-      isFrameLoaded: "content/isFrameLoaded"
+      isFrameLoaded: "content/isFrameLoaded",
+      comments: "content/comments"
     })
   },
   methods: {
     like() {
-      console.log("LIKEDTO-----");
+      console.log("LIKEDTO--");
       const likeDTO = {
         objectId: this.$store.getters["content/currentFrameId"],
         type: "frame"
