@@ -33,7 +33,10 @@ More Spring boot-Vue in a social like app with Security and multimedia Content
 - Add Frame and Message components
 - Add endpoints for frame and menssages
 - Implemented new components on vue project
-- Vue now reproduce video nicely
+- Vue now reproduce video "almost" nicely, some data reactive bug need fix
+- Add theme, sidebar, tooltips
+- Add toggle dark/light theme
+- Create /Settings and /Upload routes
 - Several fixies
 
 ## TODO
@@ -56,8 +59,9 @@ More Spring boot-Vue in a social like app with Security and multimedia Content
 - ~~frame content: ui design (v-dialog wrapping v-card like in home component, social thing and messages, def data needed to retrieve from api~~
 - ~~display video thing, please be simple~~
 - ~~code endpoints for menssages and video(maybe)~~
-- user sidebar (this will need more endopoints (for both authController/authService, to CRUD user info))
+- ~~user sidebar (this will need more endopoints (for both authController/authService, to CRUD user info))~~
 - implement following actions, accept/cancel requests in front
+- avatar also
 - pm thing, last thing, super simple
 - create  and edit support for frames (back already supports this)
 - ~~finish back, whatever it takes~~, dockerize and see heroku
