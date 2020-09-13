@@ -14,8 +14,7 @@ export default {
         }
       })
       .then(response => {
-        console.log("RESPONSE DATA FROM LIIKKE");
-        console.log(response.data);
+        return response.data.message;
       })
       .catch(error => {
         console.log(error.response.data);
@@ -37,7 +36,21 @@ export default {
       },
       data: username
     }).then(response => {
-      console.log(response.data);
+      return response.data.message;
     });
+  },
+  sendComment(commentDTO) {
+    console.log("CommentDTO");
+    console.log(commentDTO);
+    return axios
+      .post(ENDPOINT_PATH + commentDTO.username + "/addComment", commentDTO, {
+        headers: {
+          Authorization: `Bearer ${store.getters["auth/user"].token}`
+        }
+      })
+      .then(response => {
+        console.log(response.data);
+        return response.data.message;
+      });
   }
 };

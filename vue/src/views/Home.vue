@@ -1,9 +1,12 @@
 <template>
   <v-app>
+    <v-snackbar color="success" v-model="snackBar">
+      {{ message }}
+    </v-snackbar>
     <v-container fluid class="pa-5">
       <v-row no-gutters>
         <v-col cols="12">
-          <v-card class="mx-auto">
+          <v-card flat class="mx-auto">
             <v-img
               class="white--text align-end"
               v-bind:src="bigImgUrl"
@@ -22,12 +25,15 @@
       </v-row>
       <v-row>
         <v-col cols="6">
-          <v-card>
-            <v-card-title>this is User description</v-card-title>
-            <v-card-subtitle
-              >you are {{ $store.getters["auth/user"].username }} <br />
-              you likes:</v-card-subtitle
+          <v-card outlined class="pa-5 ma-0">
+            <v-card-title
+              ><p class="font-weight-bold">
+                {{ $store.getters["auth/user"].username }}
+              </p></v-card-title
             >
+            <v-card-subtitle>
+              {{ $store.getters["content/home"].text }}
+            </v-card-subtitle>
             <v-card-actions>
               <v-tooltip top>
                 <template v-slot:activator="{ on }">
@@ -57,13 +63,12 @@
           </v-card>
         </v-col>
         <v-col cols="6">
-          <v-card>
-            <v-card-title>TEXT</v-card-title>
+          <v-card flat color="primary" height="100%">
+            <v-card-title>List friends overhere</v-card-title>
             <v-card-subtitle>
-              <p>
-                {{ $store.getters["content/home"].text }}
-              </p>
-            </v-card-subtitle>
+              Maybe i should make a v-card and putting it in a
+              list</v-card-subtitle
+            >
           </v-card>
         </v-col>
       </v-row>
@@ -85,7 +90,9 @@ import { mapGetters } from "vuex";
 export default {
   name: "Home",
   data: () => ({
-    bigImgUrl: ""
+    bigImgUrl: "",
+    snackBar: false,
+    message: ""
   }),
   components: { list },
   computed: {
@@ -100,12 +107,18 @@ export default {
         objectId: this.$store.getters["content/"],
         type: "frame"
       };
-      this.$store.dispatch("social/like", likeDTO).then(() => {
-        //this.$forceUpdate();
+      this.$store.dispatch("social/like", likeDTO).then(response => {
+        this.message = response;
+        this.snackBar = true;
       });
     },
     follow() {
-      this.$store.dispatch("social/follow", this.$route.params.username);
+      this.$store
+        .dispatch("social/follow", this.$route.params.username)
+        .then(response => {
+          this.message = response;
+          this.snackBar = true;
+        });
     },
     init() {
       console.log("init home!!!!");

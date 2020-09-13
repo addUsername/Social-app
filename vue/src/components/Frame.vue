@@ -1,10 +1,12 @@
 <template>
   <div class="container">
+    <v-snackbar color="success" v-model="snackBar">
+      {{ message }}
+    </v-snackbar>
     <v-card>
       <v-row>
         <v-col class="col-8">
           <div v-if="isImg">
-            {{ "is img!!" }}
             <v-img
               class="bold--text align-end"
               height="100%"
@@ -47,14 +49,19 @@
                       <v-textarea
                         prepend-inner-icon="mdi-comment"
                         class="mx-2"
+                        :rows="6"
                         label="Comment"
-                        rows="1"
                         v-model="input"
                         v-on="on"
                         auto-grow
-                      ></v-textarea> </template
+                        ><v-icon @click.native="sendComment"
+                          >mdi-email-send</v-icon
+                        ></v-textarea
+                      > </template
                     >Make a comment!</v-tooltip
                   >
+
+                  <v-icon @click.native="sendComment">mdi-email-send</v-icon>
                 </v-form>
               </v-row>
               <v-row class="d-flex align-end">
@@ -127,7 +134,9 @@ export default {
       idFrame: "",
       likes: "",
       text: "",
-      input: "hehhe"
+      input: "",
+      snackBar: false,
+      message: ""
     };
   },
   computed: {
@@ -141,20 +150,35 @@ export default {
   },
   methods: {
     like() {
-      console.log("LIKEDTO--");
       const likeDTO = {
         objectId: this.$store.getters["content/currentFrameId"],
         type: "frame"
       };
-      console.log(likeDTO);
       //const likeDTO = [this.$store.getters["content/currentFrameId"], "frame"];
-      this.$store.dispatch("social/like", likeDTO).then(() => {
-        //this.$forceUpdate();
+      this.$store.dispatch("social/like", likeDTO).then(response => {
+        this.message = response;
+        this.snackBar = true;
       });
     },
     follow() {
       //this.$route.params.username
-      this.$store.dispatch("social/follow", this.$route.params.username);
+      this.$store
+        .dispatch("social/follow", this.$route.params.username)
+        .then(response => {
+          this.message = response;
+          this.snackBar = true;
+        });
+    },
+    sendComment() {
+      const myObj = {
+        text: this.input,
+        username: this.$route.params.username,
+        idFrame: this.$store.getters["content/currentFrameId"]
+      };
+      this.$store.dispatch("social/sendComment", myObj).then(response => {
+        this.message = response;
+        this.snackBar = true;
+      });
     }
   },
   mounted() {

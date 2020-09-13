@@ -8,7 +8,7 @@
               <v-toolbar color="primary" flat>
                 <v-toolbar-title>Login form</v-toolbar-title>
                 <v-spacer></v-spacer>
-                  <v-icon>mdi-code-tags</v-icon>
+                <v-icon>mdi-code-tags</v-icon>
               </v-toolbar>
               <v-card-text>
                 <v-form @submit.prevent="login" id="connect-submit-btn-to form">

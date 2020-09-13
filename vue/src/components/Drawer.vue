@@ -1,53 +1,60 @@
 <template>
-  <v-navigation-drawer app clipped permanent expand-on-hover color="primary">
-    <v-list>
-      <v-list-item class="px-2">
-        <v-list-item-avatar>
-          <v-img src="https://randomuser.me/api/portraits/women/85.jpg"></v-img>
-        </v-list-item-avatar>
-      </v-list-item>
+  <div>
+    <v-snackbar app color="primary" v-model="snackBar">
+      {{ message }}
+    </v-snackbar>
+    <v-navigation-drawer app clipped permanent expand-on-hover color="primary">
+      <v-list>
+        <v-list-item class="px-2">
+          <v-list-item-avatar>
+            <v-img
+              src="https://randomuser.me/api/portraits/women/85.jpg"
+            ></v-img>
+          </v-list-item-avatar>
+        </v-list-item>
 
-      <v-list-item link>
-        <v-list-item-content>
-          <v-list-item-title class="title">{{
-            $store.getters["content/home"].username
-          }}</v-list-item-title>
-          <v-list-item-subtitle>Logged In</v-list-item-subtitle>
-        </v-list-item-content>
-      </v-list-item>
-    </v-list>
+        <v-list-item link>
+          <v-list-item-content>
+            <v-list-item-title class="title">{{
+              $store.getters["content/home"].username
+            }}</v-list-item-title>
+            <v-list-item-subtitle>Logged In</v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
 
-    <v-divider></v-divider>
+      <v-divider></v-divider>
 
-    <v-list nav dense>
-      <v-list-item link to="/upload">
-        <v-list-item-icon>
-          <v-icon>mdi-upload</v-icon>
-        </v-list-item-icon>
-        <v-list-item-title>Say something!</v-list-item-title>
-      </v-list-item>
-      <v-list-item link v-bind:to="getLinkHome">
-        <v-list-item-icon>
-          <v-icon>mdi-home</v-icon>
-        </v-list-item-icon>
-        <v-list-item-title>Home</v-list-item-title>
-      </v-list-item>
-      <v-list-item link to="/settings">
-        <v-list-item-icon>
-          <v-icon>mdi-cog</v-icon>
-        </v-list-item-icon>
-        <v-list-item-title>Settings</v-list-item-title>
-      </v-list-item>
-      <v-list-item link>
-        <v-list-item-icon>
-          <v-icon>mdi-account-off</v-icon>
-        </v-list-item-icon>
-        <div @click.prevent="logout">
-          <v-list-item-title>Logout</v-list-item-title>
-        </div>
-      </v-list-item>
-    </v-list>
-  </v-navigation-drawer>
+      <v-list nav dense>
+        <v-list-item link to="/upload">
+          <v-list-item-icon>
+            <v-icon>mdi-upload</v-icon>
+          </v-list-item-icon>
+          <v-list-item-title>Say something!</v-list-item-title>
+        </v-list-item>
+        <v-list-item link v-bind:to="getLinkHome">
+          <v-list-item-icon>
+            <v-icon>mdi-home</v-icon>
+          </v-list-item-icon>
+          <v-list-item-title>Home</v-list-item-title>
+        </v-list-item>
+        <v-list-item link to="/settings">
+          <v-list-item-icon>
+            <v-icon>mdi-cog</v-icon>
+          </v-list-item-icon>
+          <v-list-item-title>Settings</v-list-item-title>
+        </v-list-item>
+        <v-list-item link>
+          <v-list-item-icon>
+            <v-icon>mdi-account-off</v-icon>
+          </v-list-item-icon>
+          <div @click.prevent="logout">
+            <v-list-item-title>Logout</v-list-item-title>
+          </div>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
+  </div>
 </template>
 
 <script>
@@ -61,7 +68,9 @@ export default {
   data() {
     return {
       //borrar
-      linkHome: "/home/" + this.$store.getters["auth/user"].username
+      linkHome: "/home/" + this.$store.getters["auth/user"].username,
+      snackBar: false,
+      message: ""
     };
   },
   computed: {
@@ -71,6 +80,8 @@ export default {
   },
   methods: {
     logout() {
+      this.message = "logged out";
+      this.snackBar = true;
       this.$store.dispatch("auth/logout");
       this.$router.push("/login");
     }

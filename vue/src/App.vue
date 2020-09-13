@@ -1,8 +1,8 @@
 <template>
-  <v-app
-    id="inspire"
-    :style="{ background: $vuetify.theme.themes.dark.background }"
-  >
+  <v-app id="inspire">
+    <v-snackbar color="success" v-model="snackBar">
+      {{ message }}
+    </v-snackbar>
     <v-app-bar color="primary">
       <v-spacer></v-spacer>
       <v-switch
@@ -39,7 +39,9 @@ export default {
   components: { drawer },
   data() {
     return {
-      switch1: true
+      switch1: true,
+      snackBar: false,
+      message: ""
     };
   },
   computed: {
