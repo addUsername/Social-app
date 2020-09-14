@@ -24,7 +24,7 @@ A rest api on spring boot powered by Vue.js
 | UPLOAD02  | Content  | Selenium |  try to upload content| `none` |
 | FRIENDS01  | Friends  | Postman |  check privileges for friend and non friend user | `done` |
 | FRIENDS02  | Friends  | Selenium |  The same | `none` |
-| COMMENTS01  | Comments  | Postman |  check CRUD operations | `working on` |
+| COMMENTS01  | Comments  | Postman |  check CRUD operations | `done` |
 | COMMENTS02  | Comments  | Selenium |  The same | `none` |
-| LIKES01  | Likes  | Postman |  add like to content | `working on` |
+| LIKES01  | Likes  | Postman |  add like to content | `done` |
 | LIKES02  | Likes  | Selenium |  The same | `none` |
