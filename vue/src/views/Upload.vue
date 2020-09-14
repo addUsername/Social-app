@@ -5,7 +5,7 @@
     </v-snackbar>
     <v-container class="fill-height" fluid>
       <v-row align="center" justify="center">
-        <v-col class="col-5">
+        <v-col class="col-7">
           <v-card color="primary" v-cloak @drop.prevent="addFile" @dragover.prevent>
             <v-card-title>Choose video or photo</v-card-title>
             <v-card-subtitle>(Drag it over)</v-card-subtitle>
@@ -22,7 +22,7 @@
             </v-card-actions>
           </v-card>
         </v-col>
-        <v-col class="col-5">
+        <v-col class="col-7">
           <v-card>
             <v-tooltip right>
               <template v-slot:activator="{ on }">
