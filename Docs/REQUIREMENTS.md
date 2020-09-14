@@ -5,11 +5,11 @@ A rest api on spring boot powered by Vue.js
 
 | Name  | Description | Status API/FRONT |
 | ------------- | ------------- | ------------- |
-| Login  | Secure endpoint for sign in and sign up  | `Done` / `none ` |
-| Content  | Upload multimedia interface   | `Done` / `none ` |
-| Friends  | Manage friendships and show privileges   | `Done` / `none ` |
-| Comments  |  CRUD comments system | `Working` / `none ` |
-| Likes | Like interface | `Done` / `none ` |
+| Login  | Secure endpoint for sign in and sign up  | `Done` / `Done ` |
+| Content  | Upload multimedia interface   | `Done` / `Done ` |
+| Friends  | Manage friendships and show privileges   | `Done` / `Done ` |
+| Comments  |  CRUD comments system | `Done` / `Done ` |
+| Likes | Like interface | `Done` / `Done ` |
 | Test | Make test for spring and vue | `Working` / `none ` |
 | Deploy | Dockerize and try to deploy frontend as static app (ideally w/o alter a lot of lines..) | `none` / `none`| 
 
