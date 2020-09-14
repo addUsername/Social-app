@@ -39,6 +39,7 @@ More Spring boot-Vue in a social like app with Security and multimedia Content
 - Create /Settings and /Upload routes
 - Add feedback to user on liking, following and commenting
 - Create userCard DTO object and component, to use while searching and viewing friends list
+- /upload view works on upload and update, delete needs full implementation (back to..)
 - Several fixies
 
 ## TODO
@@ -62,10 +63,11 @@ More Spring boot-Vue in a social like app with Security and multimedia Content
 - ~~display video thing, please be simple~~
 - ~~code endpoints for menssages and video(maybe)~~
 - ~~user sidebar (this will need more endopoints (for both authController/authService, to CRUD user info))~~
-- implement following actions, accept/cancel requests in front
-- avatar also
-- pm thing, last thing, super simple
-- create  and edit support for frames (back already supports this)
+- /settings with avatar, user info, credentials.. even account also
+- navBar
+  - implement following actions, accept/cancel requests in front
+  - pm thing, last thing, super simple
+- ~~create  and edit support for frames (back already supports this)~~
 - ~~finish back, whatever it takes~~, dockerize and see heroku
 - mock back and try to deploy front as static app
 - DON¨T FORGET VALIDATORS ON FORMS AND ENTITIES
