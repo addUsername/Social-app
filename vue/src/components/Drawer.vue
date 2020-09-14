@@ -26,11 +26,11 @@
       <v-divider></v-divider>
 
       <v-list nav dense>
-        <v-list-item link to="/upload">
+        <v-list-item color="secondary" link to="/upload">
           <v-list-item-icon>
             <v-icon>mdi-upload</v-icon>
           </v-list-item-icon>
-          <v-list-item-title>Say something!</v-list-item-title>
+          <v-list-item-title color="secondary">Say something!</v-list-item-title>
         </v-list-item>
         <v-list-item link v-bind:to="getLinkHome">
           <v-list-item-icon>

@@ -15,7 +15,7 @@ export default new Vuetify({
         background: "#eeeeee" // Added variable
       },
       dark: {
-        primary: "#5d99c6",
+        primary: "#62768B",
         secondary: "#cbba83",
         background: "#bcbcbc" // If using base color, be use to mark as such to get HEX value
       }

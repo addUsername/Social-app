@@ -5,12 +5,7 @@
     </v-snackbar>
     <v-app-bar color="primary">
       <v-spacer></v-spacer>
-      <v-switch
-        color="secondary"
-        class="pa-5"
-        v-model="switch1"
-        :label="`Switch : ${switch1.toString()}`"
-      ></v-switch>
+      <v-switch  color="secondary" v-model="$vuetify.theme.dark" primary label="Dark"></v-switch>
     </v-app-bar>
 
     <v-row>
@@ -39,7 +34,6 @@ export default {
   components: { drawer },
   data() {
     return {
-      switch1: true,
       snackBar: false,
       message: ""
     };
@@ -49,11 +43,11 @@ export default {
       isLogged: "auth/isLogged"
     })
   },
-  methods: {
-    theme() {
-      return this.$vuetify.theme.dark ? "dark" : "light";
-    }
-  }
+  methods: {}
 };
 </script>
-<style></style>
+<style>
+#app {
+  background-color: var(--v-background-base);
+}
+</style>

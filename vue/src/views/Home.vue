@@ -91,7 +91,7 @@ export default {
   name: "Home",
   data: () => ({
     bigImgUrl: "",
-    snackBar: false,
+    snackBar: true,
     message: ""
   }),
   components: { list },

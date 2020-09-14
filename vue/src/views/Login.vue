@@ -58,13 +58,15 @@ export default {
   }),
   methods: {
     login() {
-      const user = { username: this.username, password: this.password };
-      this.$store.dispatch("auth/login", user).then(() => {
-        if (this.$store.getters["auth/isLogged"]) {
-          //esto es para test
-          this.$router.push("/home/" + this.username);
-        }
-      });
+      if (this.username != "" && this.password != "") {
+        const user = { username: this.username, password: this.password };
+        this.$store.dispatch("auth/login", user).then(() => {
+          if (this.$store.getters["auth/isLogged"]) {
+            //esto es para test
+            this.$router.push("/home/" + this.username);
+          }
+        });
+      }
     }
   }
 };

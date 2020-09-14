@@ -1,6 +1,5 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Register from "../views/Register.vue";
 import store from "@/store";
 
 Vue.use(VueRouter);
@@ -13,7 +12,7 @@ const routes = [
   {
     path: "/home/:username",
     name: "Home",
-    component: () => import(/* webpackChunkName: "about" */ "../views/Home.vue")
+    component: () => import(/* webpackChunkName: "home" */ "../views/Home.vue")
   },
   {
     path: "/about",
@@ -28,12 +27,19 @@ const routes = [
     path: "/login",
     name: "Login",
     component: () =>
-      import(/* webpackChunkName: "about" */ "../views/Login.vue")
+      import(/* webpackChunkName: "login" */ "../views/Login.vue")
   },
   {
     path: "/register",
     name: "Resgister",
-    component: Register
+    component: () =>
+      import(/* webpackChunkName: "register" */ "../views/Register.vue")
+  },
+  {
+    path: "/upload",
+    name: "Upload",
+    component: () =>
+      import(/* webpackChunkName: "upload" */ "../views/Upload.vue")
   }
 ];
 

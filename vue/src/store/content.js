@@ -25,7 +25,8 @@ const content = {
     },
     isImg: "",
     isThumbnailLoaded: false,
-    ifFrameLoaded: true
+    ifFrameLoaded: true,
+    isContentWorking: false
   },
   mutations: {
     //Modify objects, keep simple as setter should be bc things
@@ -73,6 +74,10 @@ const content = {
     SAVE_ISFRAMELOADED(state, boolean) {
       state.isFrameLoaded = boolean;
       console.log("frame loaded");
+    },
+    SAVE_ISCONTENTWORKING(state, boolean) {
+      state.isContentWorking = boolean;
+      console.log("SAVE_ISCONTENTWORKING" + boolean);
     }
   },
   getters: {
@@ -87,7 +92,8 @@ const content = {
     isImg: state => state.isImg,
     isThumbnailLoaded: state => state.isThumbnailLoaded,
     isFrameLoaded: state => state.isFrameLoaded,
-    comments: state => state.frame.comments
+    comments: state => state.frame.comments,
+    isContentWorking: state => state.isContentWorking
   },
   actions: {
     // Api calls here, actions are meant to be async while mutations should happen as near to instantly as possible.
@@ -174,6 +180,13 @@ const content = {
     },
     setFrameId({ commit }, frameId) {
       commit("SAVE_CURRENTFRAMEID", frameId);
+    },
+    uploadFrame({ commit }, Obj) {
+      commit("SAVE_ISCONTENTWORKING", true);
+      contentService.uploadFrame(Obj.file, Obj.media).then(response => {
+        commit("SAVE_ISCONTENTWORKING", false);
+        return response;
+      });
     }
   }
 };
