@@ -5,14 +5,17 @@
     </v-snackbar>
     <v-app-bar color="primary">
       <v-spacer></v-spacer>
-      <v-switch  color="secondary" v-model="$vuetify.theme.dark" primary label="Dark"></v-switch>
+      <v-switch
+        color="secondary"
+        v-model="$vuetify.theme.dark"
+        primary
+        label="Dark"
+      ></v-switch>
     </v-app-bar>
 
     <v-row>
       <template v-if="isLogged">
-        <v-col class="ma-0 pa-0 col-1">
-          <drawer />
-        </v-col>
+        <drawer />
       </template>
       <v-col class="ma-0 pa-0 col-12">
         <v-main>

@@ -64,7 +64,7 @@ export default {
   },
   uploadFrame(file, media) {
     const mediaBlob = new Blob([JSON.stringify(media)], {
-      type: 'application/json'
+      type: "application/json"
     });
     /*const fileBlob = new Blob([JSON.stringify(file)], {
       type: file.type

@@ -5,24 +5,29 @@
     </v-snackbar>
     <v-container class="fill-height" fluid>
       <v-row align="center" justify="center">
-        <v-col class="col-7">
-          <v-card color="primary" v-cloak @drop.prevent="addFile" @dragover.prevent>
+        <v-col lg="7" sm="12">
+          <v-card
+            color="primary"
+            v-cloak
+            @drop.prevent="addFile"
+            @dragover.prevent
+          >
             <v-card-title>Choose video or photo</v-card-title>
             <v-card-subtitle>(Drag it over)</v-card-subtitle>
-            {{ file.name }} 
+            {{ file.name }}
             <v-card-actions>
-                <v-file-input
+              <v-file-input
                 accept="image/png, image/jpeg, video/mp4"
                 placeholder=""
                 prepend-icon="mdi-camera"
                 v-model="file"
-                ></v-file-input>
+              ></v-file-input>
               <v-btn @click="removeFile(file)" title="Remove">X</v-btn>
               <v-btn color="secondary" @click="upload">Upload</v-btn>
             </v-card-actions>
           </v-card>
         </v-col>
-        <v-col class="col-7">
+        <v-col lg="7" sm="12">
           <v-card>
             <v-tooltip right>
               <template v-slot:activator="{ on }">

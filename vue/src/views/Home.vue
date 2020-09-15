@@ -24,7 +24,7 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col cols="6">
+        <v-col lg="6" sm="12">
           <v-card outlined class="pa-5 ma-0">
             <v-card-title
               ><p class="font-weight-bold">
@@ -62,7 +62,7 @@
             </v-card-actions>
           </v-card>
         </v-col>
-        <v-col cols="6">
+        <v-col lg="6" sm="12">
           <v-card flat color="primary" height="100%">
             <v-card-title>List friends overhere</v-card-title>
             <v-card-subtitle>
@@ -92,7 +92,7 @@ export default {
   data: () => ({
     bigImgUrl: "",
     snackBar: true,
-    message: ""
+    message: "Hey! hello!"
   }),
   components: { list },
   computed: {
