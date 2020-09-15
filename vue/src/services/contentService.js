@@ -66,21 +66,21 @@ export default {
     const mediaBlob = new Blob([JSON.stringify(media)], {
       type: "application/json"
     });
-    /*const fileBlob = new Blob([JSON.stringify(file)], {
-      type: file.type
-    });*/
-
     var formData = new FormData();
     formData.append("file", file);
     formData.append("media", mediaBlob);
 
-    return axios.post(ENDPOINT_PATH + "upload/", formData, {
-      //mirar aqui, nosq xq content-type tiene que ir asi, quizas probando con type
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "multipart/form-data",
-        Authorization: `Bearer ${store.getters["auth/user"].token}`
-      }
-    });
+    return axios
+      .post(ENDPOINT_PATH + "upload/", formData, {
+        //mirar aqui, nosq xq content-type tiene que ir asi, quizas probando con type
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${store.getters["auth/user"].token}`
+        }
+      })
+      .then(response => {
+        return response.data.message;
+      });
   }
 };

@@ -90,12 +90,14 @@ export default {
           username: this.$store.getters["auth/user"].username,
           text: this.input,
           docType: this.file.type,
-          frameId: "testframeee"
+          frameId: "testframe222ee"
         }
       };
       this.$store.dispatch("content/uploadFrame", myObj).then(response => {
         this.message = response;
         this.snackBar = true;
+        this.file = "";
+        this.input = "";
       });
     }
   }

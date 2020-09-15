@@ -5,7 +5,7 @@
     </v-snackbar>
     <v-card>
       <v-row>
-        <v-col class="col-8">
+        <v-col :key="isImg" class="col-8">
           <div v-if="isImg">
             <v-img
               class="bold--text align-end"
@@ -16,7 +16,7 @@
             >
               <v-chip class="ma-2" color="pink" outlined>
                 <v-icon dark>mdi-heart</v-icon>
-                {{ frame.likes }}
+                {{ frame.likes }} hii
               </v-chip>
             </v-img>
           </div>
@@ -24,8 +24,8 @@
             <v-tooltip left nudge-left>
               <template v-slot:activator="{ on }">
                 <video
+                  v-bind:src="getBLOB"
                   onclick="this.paused ? this.play() : this.pause();"
-                  :key="isFrameLoaded"
                   v-on="on"
                 >
                   <source v-bind:src="getBLOB" type="video/mp4" />
@@ -134,7 +134,7 @@ export default {
       idFrame: "",
       likes: "",
       text: "",
-      input: "",
+      input: "jjj",
       snackBar: false,
       message: ""
     };

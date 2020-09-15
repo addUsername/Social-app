@@ -25,7 +25,7 @@ const content = {
     },
     isImg: "",
     isThumbnailLoaded: false,
-    ifFrameLoaded: true,
+    isFrameLoaded: false,
     isContentWorking: false
   },
   mutations: {
@@ -137,11 +137,9 @@ const content = {
             new Blob([response.data], { type: state.frame.mediaType })
           );
           commit("SAVE_CURRENTBLOB", url);
-          if (state.frame.mediaType == "video/mp4") {
-            console.log("ISFRAMELOADED TRUEEE!!!!!!!!!!!!!!!");
-            commit("SAVE_ISFRAMELOADED", true);
-          }
-          //return url;
+          console.log("ISFRAMELOADED TRUEEE!!!!!!!!!!!!!!!");
+          commit("SAVE_ISFRAMELOADED", true);
+          return;
         });
     },
     getThumbnails({ commit, state }) {
@@ -168,8 +166,7 @@ const content = {
     getFrame({ commit }, obj) {
       contentService.getFrame(obj).then(response => {
         commit("SAVE_FRAME", response.data);
-        // should be === "image/jpg"
-        if (response.data.mediaType === "image/jpg") {
+        if (response.data.mediaType.includes("image")) {
           commit("SAVE_ISIMG", true);
         } else {
           //is video/mp4
@@ -183,7 +180,7 @@ const content = {
     },
     uploadFrame({ commit }, Obj) {
       commit("SAVE_ISCONTENTWORKING", true);
-      contentService.uploadFrame(Obj.file, Obj.media).then(response => {
+      return contentService.uploadFrame(Obj.file, Obj.media).then(response => {
         commit("SAVE_ISCONTENTWORKING", false);
         return response;
       });

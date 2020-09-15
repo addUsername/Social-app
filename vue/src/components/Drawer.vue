@@ -8,7 +8,7 @@
       clipped
       permanent
       expand-on-hover
-      class="hidden-sm-and-down"
+      class="hidden-sm-and-down fill-height"
       color="primary"
     >
       <v-list>
