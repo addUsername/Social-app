@@ -36,6 +36,7 @@ public class FrameService {
 		// TODO Auto-generated method stub
 		Frame frame = repo.findById(idFrame).get();
 		FrameDTO toReturn = new FrameDTO();
+		toReturn.setFrameId(frame.getId());
 		toReturn.setComments(frame.getComments());
 		toReturn.setText(frame.getText());
 		toReturn.setMedia_id(frame.getMedia().getId());
@@ -53,6 +54,9 @@ public class FrameService {
 		List<Comment> frameMssg = frameMssg2.collect(Collectors.toList());	
 			
 		if(frameMssg.size()>0) {
+			// Aqui deberiamos borrar la fecha de algun modo.. igual peta, tb podemos 
+			// borrar este comentario y guardar uno nuevo.. mientras mantenga el frame ID
+			// sin problemas [[todo esto es por el valor del atributo date que inyecta hibernate]]
 			Comment com = commentRepo.findById(frameMssg.get(0).getId()).get();
 			com.setText(comment.getText());
 			com.setEdited(true);

@@ -59,6 +59,7 @@ public class StorageMediaService {
 		}
 		//getting the name
 		String originalFileName = StringUtils.cleanPath(file.getOriginalFilename());
+		System.out.println("originalFileName "+ originalFileName);
 		String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
 		//this could be a title in the future, just need a unique not id
 		String filename = mediaDTO.getFrameId() + extension;
@@ -78,7 +79,8 @@ public class StorageMediaService {
 		//if(mediarepo.existsByFilename(filename)) toReturn = "Update frame";
 		String toReturn = (!mediarepo.existsByFilename(filename))? "Add frame" : "Update frame";
 		Media media = new Media();
-		media.setDocumentType(extension.substring(1));
+		//TYPE STORED HEREE SHOULD UPDATE ENTIRE DB!!
+		media.setDocumentType(mediaDTO.getDocType());
 		media.setPath(saveLocation.toFile().getAbsolutePath());
 		media.setFilename(filename);
 		media.setMini_image(mini_image);
@@ -105,11 +107,15 @@ public class StorageMediaService {
 		
 		File file = new File( media.getPath());
 		
-		String type = "video";
-		if( (media.getDocumentType().equals("jpg")) || (media.getDocumentType().equals("png"))) type = "image";
+		//String type = "video";
+		//if( (media.getDocumentType().equals("jpg")) || (media.getDocumentType().equals("png"))) type = "image";
 		
 	    HttpHeaders respHeaders = new HttpHeaders();
-		respHeaders.setContentType(new MediaType(type,media.getDocumentType()));
+	    System.out.println(media.getDocumentType());
+	    
+	    //this shit is bc we have to create a new media like MediaType(type, subtype);
+	    System.out.println(media.getDocumentType().split("/")[0]+ media.getDocumentType().split("/")[1] );
+		respHeaders.setContentType(new MediaType(media.getDocumentType().split("/")[0], media.getDocumentType().split("/")[1] ));
 	    respHeaders.setContentLength(file.length());
 		objects[0] = file;
 		objects[1] = respHeaders;
@@ -138,9 +144,9 @@ public class StorageMediaService {
 			
 			BufferedImage inputImage=null;
 			
-			if(type.equals("video")){
+			if(type.equals("video/mp4")){
 				//esto nos permite pillar el frame 50 del video
-				Picture picture = FrameGrab.getFrameFromFile(file, 50);
+				Picture picture = FrameGrab.getFrameFromFile(file, 10);
 				inputImage = AWTUtil.toBufferedImage(picture); 
 			}else {
 				inputImage = ImageIO.read(file);
