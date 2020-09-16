@@ -9,6 +9,6 @@ import lombok.Setter;
 @NoArgsConstructor@Getter@Setter
 public class LikeDTO {
 
-	private Long id;
-	private String type; //Could be a enum, unique values {frame,post} or byte bc speed
+	private Long objectId;
+	private String type; //Could be a enum, unique values {frame,comment} or byte bc speed
 }

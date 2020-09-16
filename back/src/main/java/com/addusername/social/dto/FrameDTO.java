@@ -11,6 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor@Getter@Setter
 public class FrameDTO {
 	
+	private Long frameId;
 	private Long media_id;
 	private List<Comment> comments;
 	private String text;
