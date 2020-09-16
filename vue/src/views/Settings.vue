@@ -1,8 +1,11 @@
 <template>
   <v-app id="inspire">
+    <v-snackbar color="success" v-model="snackBar">
+      {{ message }}
+    </v-snackbar>
     <v-card>
       <v-toolbar flat color="secundary" dark> </v-toolbar>
-      <v-tabs vertical>
+      <v-tabs>
         <v-tab> <v-icon left>mdi-account</v-icon>Profile </v-tab>
         <v-tab> <v-icon left>mdi-lock</v-icon> security </v-tab>
         <v-tab> <v-icon left>mdi-access-point</v-icon> Media </v-tab>
@@ -39,25 +42,27 @@
                 <v-card-subtitle>Type password and confirm</v-card-subtitle>
               </v-card-text>
               <v-card-actions>
-                <v-col lg="7" sm="12">
-                  <v-text-field
-                    id="password"
-                    label="Type password to confirm"
-                    name="password"
-                    prepend-icon="mdi-lock"
-                    type="password"
-                    :rules="['Required']"
-                    v-model="password"
-                  ></v-text-field>
-                </v-col>
-                <v-col lg="7" sm="12">
-                  <v-btn
-                    color="primary"
-                    type="submit"
-                    form="connect-submit-btn-to form"
-                    >Update</v-btn
-                  ></v-col
-                >
+                <v-row>
+                  <v-col lg="6" sm="12">
+                    <v-text-field
+                      id="password"
+                      label="Type password to confirm"
+                      name="password"
+                      prepend-icon="mdi-lock"
+                      type="password"
+                      :rules="['Required']"
+                      v-model="password"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col lg="6" sm="12">
+                    <v-btn
+                      color="primary"
+                      type="submit"
+                      form="connect-submit-btn-to form"
+                      >Update</v-btn
+                    ></v-col
+                  >
+                </v-row>
               </v-card-actions>
             </v-card>
           </v-row>
@@ -91,7 +96,7 @@
                   name="password"
                   prepend-icon="mdi-lock"
                   type="password"
-                  v-model="password"
+                  v-model="newPassword"
                 ></v-text-field>
                 <v-text-field
                   id="password2"
@@ -99,7 +104,7 @@
                   name="password2"
                   prepend-icon="mdi-lock"
                   type="password"
-                  v-model="password2"
+                  v-model="newPassword2"
                 ></v-text-field>
               </v-card-text>
               <v-card-title>Account</v-card-title>
@@ -141,21 +146,20 @@
               </v-card-text>
               <v-card-actions>
                 <v-col lg="7" sm="12">
+                  <v-card-subtitle>
+                    <p>
+                      Please type: "I want to commit these changes"
+                    </p></v-card-subtitle
+                  >
                   <v-text-field
-                    id="password"
-                    label="Type password to confirm"
-                    name="password"
+                    label="Type here"
                     prepend-icon="mdi-lock"
-                    type="password"
                     :rules="['Required']"
-                    v-model="password"
+                    v-model="confirm"
                   ></v-text-field>
                 </v-col>
                 <v-col lg="7" sm="12">
-                  <v-btn
-                    color="primary"
-                    type="submit"
-                    form="connect-submit-btn-to form"
+                  <v-btn color="primary" @click.prevent="submitSecurity"
                     >Update</v-btn
                   ></v-col
                 >
@@ -205,7 +209,73 @@
 </template>
 
 <script>
-export default {};
+import { mapGetters } from "vuex";
+
+export default {
+  data() {
+    return {
+      email: "",
+      confirm: "",
+      newPassword: "",
+      newPassword2: "",
+      password2: "",
+      checkboxSuspend: false,
+      checkboxDelete: false,
+      message: "",
+      snackBar: false
+    };
+  },
+  computed: {
+    ...mapGetters({
+      user: "auth/user",
+      isFrameLoaded: "content/isFrameLoaded"
+    })
+  },
+  methods: {
+    submitSecurity() {
+      if (this.confirm !== "I want to commit these changes") {
+        return this.showMessage(
+          "Please write the sentence correctly to validate your actions"
+        );
+      }
+      if (this.checkboxSuspend && this.checkboxDelete) {
+        return this.showMessage(
+          "Please choose one between suspend action or delete"
+        );
+      }
+      if (this.newPassword !== this.newPassword2) {
+        return this.showMessage("Passwords didn't match");
+      }
+      if (this.email !== "" && this.newPassword !== "") {
+        return this.showMessage(
+          "Password and email can't be changed at once :)"
+        );
+      }
+      const updateClientDTO = {
+        username: this.user.username,
+        delete: this.checkboxDelete,
+        suspend: this.checkboxSuspend,
+        newPassword: this.newPassword,
+        newEmail: this.newEmail
+      };
+      console.log(updateClientDTO);
+      this.$store
+        .dispatch("social/updateClient", updateClientDTO)
+        .then(response => {
+          this.message = response;
+          this.snackBar = true;
+          if (this.checkboxDelete || this.newPassword !== "") {
+            this.$router.push("/login");
+          }
+        });
+    },
+    showMessage(message) {
+      this.message = message;
+      this.snackBar = true;
+      return;
+    }
+  }
+};
 </script>
 
 <style></style>

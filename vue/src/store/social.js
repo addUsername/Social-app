@@ -30,9 +30,16 @@ const content = {
         return response;
       });
     },
-    sendComment({ commit }, CommentDTO) {
+    sendComment({ commit }, commentDTO) {
       commit("SAVE_ISSOCIALWORKING", true);
-      return socialService.sendComment(CommentDTO).then(response => {
+      return socialService.sendComment(commentDTO).then(response => {
+        commit("SAVE_ISSOCIALWORKING", false);
+        return response;
+      });
+    },
+    updateClient({ commit }, updateClientDTO) {
+      commit("SAVE_ISSOCIALWORKING", true);
+      return socialService.updateClient(updateClientDTO).then(response => {
         commit("SAVE_ISSOCIALWORKING", false);
         return response;
       });

@@ -23,11 +23,6 @@ export default {
       });
   },
   follow(username) {
-    console.log(
-      "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-    );
-    console.log(username);
-    console.log(username.username);
     axios({
       method: "post", //put
       url: ENDPOINT_PATH + "follow",
@@ -40,10 +35,20 @@ export default {
     });
   },
   sendComment(commentDTO) {
-    console.log("CommentDTO");
-    console.log(commentDTO);
     return axios
       .post(ENDPOINT_PATH + commentDTO.username + "/addComment", commentDTO, {
+        headers: {
+          Authorization: `Bearer ${store.getters["auth/user"].token}`
+        }
+      })
+      .then(response => {
+        console.log(response.data);
+        return response.data.message;
+      });
+  },
+  updateClient(updateClientDTO) {
+    return axios
+      .post(ENDPOINT_PATH + "update/credentials", updateClientDTO, {
         headers: {
           Authorization: `Bearer ${store.getters["auth/user"].token}`
         }

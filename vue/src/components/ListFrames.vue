@@ -40,7 +40,7 @@ export default {
   components: { frame },
   data() {
     return {
-      dialog: true
+      dialog: false
     };
   },
   computed: {
