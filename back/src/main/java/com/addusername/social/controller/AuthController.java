@@ -85,7 +85,7 @@ public class AuthController {
     clientService.save(usuario);
     
     //Como no hemos relacionado el objeto Client con ContentClient, ahora tenemos que crear uno
-    // y añadirse asi mismo como amigo
+    // y añadirse asi mismo como amigo, hakc
     System.out.println(usuario.getUsername());
     Content newContent = new Content(usuario.getUsername(),new ArrayList<Content>(),new ArrayList<Frame>());
     List<Content> myList = newContent.getFriend_ids();
@@ -110,6 +110,7 @@ public class AuthController {
         JwtDTO jwtDTO = new JwtDTO(jwt, userDetails.getUsername(), userDetails.getAuthorities());
         return new ResponseEntity<JwtDTO>(jwtDTO, HttpStatus.OK);
     }
+
 }
 
 	
