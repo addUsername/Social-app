@@ -90,9 +90,11 @@ export default {
           username: this.$store.getters["auth/user"].username,
           text: this.input,
           docType: this.file.type,
-          frameId: "testframe222ee"
+          isHome: false,
+          frameId: -1
         }
       };
+      console.log(myObj);
       this.$store.dispatch("content/uploadFrame", myObj).then(response => {
         this.message = response;
         this.snackBar = true;

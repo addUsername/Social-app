@@ -12,12 +12,10 @@
               v-bind:src="bigImgUrl"
               height="400px"
               align="right"
+              alt="ppalimage"
             >
               <v-avatar size="180" color="grey lighten-4">
-                <img
-                  src="https://vuetifyjs.com/apple-touch-icon-180x180.png"
-                  alt="avatar"
-                />
+                <img v-bind:src="avatarBlob" alt="avatar" />
               </v-avatar>
             </v-img>
           </v-card>
@@ -98,7 +96,8 @@ export default {
   computed: {
     ...mapGetters({
       childDataLoaded: "content/isThumbnailLoaded",
-      isFrameLoaded: "content/isFrameLoaded"
+      isFrameLoaded: "content/isFrameLoaded",
+      avatarBlob: "content/avatarBlob"
     })
   },
   methods: {
@@ -130,6 +129,7 @@ export default {
             this.bigImgUrl = img;
           });
           this.$store.dispatch("content/getThumbnails");
+          this.$store.dispatch("content/getAvatar", this.$store.getters["auth/user"].username);
         });
     }
   },

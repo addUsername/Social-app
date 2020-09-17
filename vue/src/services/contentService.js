@@ -51,6 +51,17 @@ export default {
       }
     });
   },
+  getAvatar(username) {
+    console.log("making request get");
+    return axios.get(ENDPOINT_PATH + "avatar/" + username, {
+      responseType: "blob",
+      //mirar aqui, tenemos que pasarle el type video o png
+      type: "image/png",
+      headers: {
+        Authorization: `Bearer ${store.getters["auth/user"].token}`
+      }
+    });
+  },
   getFrame(obj) {
     console.log("getting frame");
     return axios.get(
@@ -72,6 +83,23 @@ export default {
 
     return axios
       .post(ENDPOINT_PATH + "upload/", formData, {
+        //mirar aqui, nosq xq content-type tiene que ir asi, quizas probando con type
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${store.getters["auth/user"].token}`
+        }
+      })
+      .then(response => {
+        return response.data.message;
+      });
+  },
+  uploadAvatar(file, username) {
+    var formData = new FormData();
+    formData.append("file", file);
+
+    return axios
+      .post(ENDPOINT_PATH + "upload/avatar/" + username, formData, {
         //mirar aqui, nosq xq content-type tiene que ir asi, quizas probando con type
         headers: {
           Accept: "application/json",

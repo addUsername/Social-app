@@ -13,14 +13,15 @@
         <v-tab-item>
           <v-row align="center" justify="center">
             <v-card flat class="col-6">
-              <v-card-title>Edit Home</v-card-title>
               <v-card-text>
+                <v-card-title>Change avatar</v-card-title>
                 <v-file-input
                   accept="image/png, image/jpeg"
                   placeholder="Avatar"
                   prepend-icon="mdi-camera"
                   v-model="fileAvatar"
                 ></v-file-input>
+                <v-card-title>Edit home</v-card-title>
                 <v-tooltip color="primary" top>
                   <template v-slot:activator="{ on }">
                     <v-text-field
@@ -34,35 +35,31 @@
                   across</v-tooltip
                 >
                 <v-file-input
-                  accept="image/png, image/jpeg"
+                  accept="image/jpeg"
                   placeholder="Home"
                   prepend-icon="mdi-camera"
-                  v-model="fileBig"
+                  v-model="fileHome"
                 ></v-file-input>
-                <v-card-subtitle>Type password and confirm</v-card-subtitle>
               </v-card-text>
               <v-card-actions>
-                <v-row>
-                  <v-col lg="6" sm="12">
-                    <v-text-field
-                      id="password"
-                      label="Type password to confirm"
-                      name="password"
-                      prepend-icon="mdi-lock"
-                      type="password"
-                      :rules="['Required']"
-                      v-model="password"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col lg="6" sm="12">
-                    <v-btn
-                      color="primary"
-                      type="submit"
-                      form="connect-submit-btn-to form"
-                      >Update</v-btn
-                    ></v-col
+                <v-col lg="7" sm="12">
+                  <v-card-subtitle>
+                    <p>
+                      Please type: "I want to commit these changes"
+                    </p></v-card-subtitle
                   >
-                </v-row>
+                  <v-text-field
+                    label="Type here"
+                    prepend-icon="mdi-lock"
+                    :rules="['Required']"
+                    v-model="confirm"
+                  ></v-text-field>
+                </v-col>
+                <v-col lg="3" sm="12">
+                  <v-btn color="primary" @click.prevent="submitHome"
+                    >Update</v-btn
+                  ></v-col
+                >
               </v-card-actions>
             </v-card>
           </v-row>
@@ -221,6 +218,9 @@ export default {
       password2: "",
       checkboxSuspend: false,
       checkboxDelete: false,
+      fileHome: "",
+      fileAvatar: "",
+      textHome: "",
       message: "",
       snackBar: false
     };
@@ -267,7 +267,56 @@ export default {
           if (this.checkboxDelete || this.newPassword !== "") {
             this.$router.push("/login");
           }
+          //aqui deberia borrar el state xd
+          (this.checkboxDelete = false),
+            (this.checkboxSuspend = false),
+            (this.newPassword = "");
+          this.newEmail = "";
         });
+    },
+    submitHome() {
+      if (this.confirm !== "I want to commit these changes") {
+        return this.showMessage(
+          "Please write the sentence correctly to validate your actions"
+        );
+      }
+      if (this.fileAvatar == "") {
+        if (this.fileHome == "" || this.textHome == "") {
+          return this.showMessage(
+            "Please add a home image with its description text"
+          );
+        } else {
+          //update home here
+          console.log("ELSEEEEEE");
+          const myObj = {
+            file: this.fileHome,
+            media: {
+              username: this.$store.getters["auth/user"].username,
+              text: this.textHome,
+              docType: this.fileHome.type,
+              isHome: true,
+              frameId: this.$store.getters["content/home"].bigImg
+            }
+          };
+          console.log(myObj);
+          this.$store.dispatch("content/uploadFrame", myObj).then(response => {
+            this.fileHome = "";
+            this.textHome = "";
+            return this.showMessage(response);
+          });
+        }
+      }
+
+      const obj = {
+        username: this.user.username,
+        file: this.fileAvatar
+      };
+      this.$store.dispatch("content/uploadAvatar", obj).then(response => {
+        this.message = response;
+        this.snackBar = true;
+        this.fileAvatar = "";
+        //aqui deberia borrar el state xd y hacer una funcion a parte..xd
+      });
     },
     showMessage(message) {
       this.message = message;

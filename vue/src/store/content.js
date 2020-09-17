@@ -16,6 +16,7 @@ const content = {
     thumbFrame: [],
     currentFrameId: "",
     currentBlob: "",
+    avatarBlob: "",
     frame: {
       media_id: "",
       comments: [],
@@ -78,6 +79,10 @@ const content = {
     SAVE_ISCONTENTWORKING(state, boolean) {
       state.isContentWorking = boolean;
       console.log("SAVE_ISCONTENTWORKING" + boolean);
+    },
+    SAVE_AVATARBLOB(state, avatar) {
+      state.avatarBlob = avatar;
+      console.log("SAVE_AVATARBLOB");
     }
   },
   getters: {
@@ -93,7 +98,8 @@ const content = {
     isThumbnailLoaded: state => state.isThumbnailLoaded,
     isFrameLoaded: state => state.isFrameLoaded,
     comments: state => state.frame.comments,
-    isContentWorking: state => state.isContentWorking
+    isContentWorking: state => state.isContentWorking,
+    avatarBlob: state => state.avatarBlob
   },
   actions: {
     // Api calls here, actions are meant to be async while mutations should happen as near to instantly as possible.
@@ -183,6 +189,26 @@ const content = {
       return contentService.uploadFrame(Obj.file, Obj.media).then(response => {
         commit("SAVE_ISCONTENTWORKING", false);
         return response;
+      });
+    },
+    uploadAvatar({ commit }, Obj) {
+      commit("SAVE_ISCONTENTWORKING", true);
+      return contentService
+        .uploadAvatar(Obj.file, Obj.username)
+        .then(response => {
+          commit("SAVE_ISCONTENTWORKING", false);
+          return response;
+        });
+    },
+    getAvatar({ commit }, username) {
+      commit("SAVE_ISCONTENTWORKING", true);
+      return contentService.getAvatar(username).then(response => {
+        commit(
+          "SAVE_AVATARBLOB",
+          URL.createObjectURL(new Blob([response.data]))
+        );
+        commit("SAVE_ISCONTENTWORKING", false);
+        return;
       });
     }
   }
