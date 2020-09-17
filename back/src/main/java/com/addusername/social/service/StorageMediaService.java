@@ -9,6 +9,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.Random;
 
 import javax.imageio.ImageIO;
 
@@ -38,6 +39,7 @@ public class StorageMediaService {
 	private String uploadLocation = "src/main/resources/static/media/upload";
 	private final int MiniImageHeight = 400;
 	private final int MiniImageWidth = 400;
+	private final int seed = 9999999; //max num generated
 	
 	//Change to service.. see services vs repositories
 	@Autowired
@@ -57,12 +59,12 @@ public class StorageMediaService {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		//getting the name
+		//getting the name		
 		String originalFileName = StringUtils.cleanPath(file.getOriginalFilename());
 		System.out.println("originalFileName "+ originalFileName);
 		String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
 		//this could be a title in the future, just need a unique not id
-		String filename = mediaDTO.getFrameId() + extension;
+		String filename = new Random().nextInt(this.seed) + extension;
 		Path saveLocation = folder.resolve(filename);
 		String mini_image = "null";
 		
@@ -72,30 +74,71 @@ public class StorageMediaService {
 			mini_image = getThumbnail(saveLocation.toFile(),mediaDTO.getDocType());
 		} catch (IOException e) {
 			e.printStackTrace();
+		}		
+		String toReturn = "";
+		Media media = new Media();
+		Frame frame = new Frame();
+		//Persistence, looks pretty ugly, refactor..
+		
+		//SOLVED!! Rules for Vue setting frameId (1 == home, -1 == new frame, [frame id readed from response] == get in (H)
+		if ( !mediarepo.existsById(mediaDTO.getFrameId())) {
+			toReturn = (mediaDTO.getIsHome())? "Home updated":"Post uploaded";
+			}else {			
+			try {
+				toReturn = "Update frame";
+				media = mediarepo.findById(mediaDTO.getFrameId()).get();
+				Files.delete(folder.resolve(media.getFilename()));
+				//esto creo que esta mal, aunqe en la DB idFrame and idMedia are equals (bc 1to1) i dont need
+				//to search by media_id
+				//borrar este metodo
+				//frame = frameService.findByMedia_id(mediaDTO.getFrameId().get();
+				frame = frameService.getById(mediaDTO.getFrameId()).get();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 		
-		
-		//Persistence
-		//if(mediarepo.existsByFilename(filename)) toReturn = "Update frame";
-		String toReturn = (!mediarepo.existsByFilename(filename))? "Add frame" : "Update frame";
-		Media media = new Media();
-		//TYPE STORED HEREE SHOULD UPDATE ENTIRE DB!!
 		media.setDocumentType(mediaDTO.getDocType());
 		media.setPath(saveLocation.toFile().getAbsolutePath());
 		media.setFilename(filename);
 		media.setMini_image(mini_image);
-		
-		
-		Frame frame = new Frame();
-		frame.setComments(new ArrayList<Comment>());
+		if (frame.getComments() == null) frame.setComments(new ArrayList<Comment>());
 		frame.setMedia(media);
-		frame.setText(mediaDTO.getText());
+		if (mediaDTO.getText() != "") frame.setText(mediaDTO.getText());
 		
 		Content content = contentService.getByUsername(mediaDTO.getUsername()).get();
 		frame.setContent(content);
 		frameService.save(frame);
 		
 		return toReturn;
+	}
+public String saveFileAvatar(MultipartFile file, String username) {
+		
+	Path folder = Paths.get(this.uploadLocation + "/avatars/");
+	try {
+		folder = Files.createDirectories(folder);
+	} catch (IOException e) {
+		e.printStackTrace();
+	}
+	//getting the name
+	String originalFileName = StringUtils.cleanPath(file.getOriginalFilename());
+	System.out.println("originalFileName "+ originalFileName);
+	//this could be a title in the future, just need a unique not id
+	Path saveLocation = folder.resolve(username+".jpg");
+	
+	//Copiamos y reemplazamos si existe
+	String avatarPath = "";
+	try {
+		Files.copy(file.getInputStream(), saveLocation, StandardCopyOption.REPLACE_EXISTING);
+		avatarPath = getThumbnail(saveLocation.toFile(),"image/jpg");
+	} catch (IOException e) {
+		e.printStackTrace();
+	}
+	Content content = contentService.getByUsername(username).get();
+	content.setAvatarPath(avatarPath);
+	contentService.save(content);
+	
+	return "Avatar updated";
 	}
 	
 	public Object[] loadFileAsResource(String id) {
@@ -167,6 +210,20 @@ public class StorageMediaService {
 		}
 		
 		return path;
+	}
+
+	public Object[] loadAvatarAsResource(String username) {
+		// TODO Auto-generated method stub
+		Object[] objects=new Object[2];
+		
+		File file = new File((contentService.findByUsername(username)).get().getAvatarPath());
+		
+	    HttpHeaders respHeaders = new HttpHeaders();
+		respHeaders.setContentType(new MediaType("image","png"));
+	    respHeaders.setContentLength(file.length());
+		objects[0] = file;
+		objects[1] = respHeaders;
+		return objects;
 	}
 	
 }
