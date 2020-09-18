@@ -13,7 +13,9 @@ import org.springframework.stereotype.Service;
 import com.addusername.social.dto.CommentDTO;
 import com.addusername.social.dto.FrameDTO;
 import com.addusername.social.entities.content.Comment;
+import com.addusername.social.entities.content.Content;
 import com.addusername.social.entities.content.Frame;
+import com.addusername.social.entities.content.Media;
 import com.addusername.social.repository.CommentRepository;
 import com.addusername.social.repository.FrameRepository;
 
@@ -25,6 +27,8 @@ public class FrameService {
 	FrameRepository repo;
 	@Autowired
 	CommentRepository commentRepo;
+	@Autowired
+	ContentService contentService;
 	
 	public Optional<Frame> getById(Long id){
 		return repo.findById(id);		
@@ -73,6 +77,21 @@ public class FrameService {
 		commentRepo.save(com);	
 		repo.save(frame);
 		return "Message added";
+		
+	}
+	public Optional<Media>findByMedia_id(Long media_id) {
+		return repo.findByMedia_id(media_id);		
+	}
+	public String deleteFrame(Frame frame) {
+		Content content = frame.getContent();
+		List <Frame> frames = content.getFrames().stream()
+			.filter(fram -> frame.getId() != fram.getId())
+			.collect(Collectors.toList());
+		content.setFrames(frames);
+		contentService.save(content);
+		
+		repo.delete(frame);
+		return "frame deleted";
 		
 	}
 
