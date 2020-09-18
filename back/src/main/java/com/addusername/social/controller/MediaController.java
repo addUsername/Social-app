@@ -63,7 +63,21 @@ public class MediaController {
 		
 		return new ResponseEntity(new Message(message), HttpStatus.OK);
 	}
-	
+	@RequestMapping(value = "/upload/avatar/{username}", method = RequestMethod.POST, consumes = {"multipart/form-data"})
+	@PreAuthorize("hasRole('USER')")
+	public ResponseEntity<?> uploadAvatar(@PathVariable(value = "username") String username,
+			@RequestPart("file") MultipartFile file){
+		
+		//if(bindingResult.hasErrors()) return new ResponseEntity(new Message("Response entity malformed :S"), HttpStatus.BAD_REQUEST);
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();		
+		if(!username.equals(( (MyUserDetails) auth.getPrincipal() ).getUsername())) {
+			return new ResponseEntity(new Message("u are not "+username), HttpStatus.BAD_REQUEST);
+		}
+		String message = storageService.saveFileAvatar(file, username);
+		
+		return new ResponseEntity(new Message(message), HttpStatus.OK);
+	}
 	@GetMapping(value = "/home/{username}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('USER')")
 	public ResponseEntity<?> getUserFrontpage(@PathVariable(value = "username") String username){
@@ -111,6 +125,31 @@ public class MediaController {
 		
 		//LOGIC HERE
 		Object[] resource = storageService.loadThumbnailAsResource(idMedia);
+		return new ResponseEntity<FileSystemResource>(
+		        new FileSystemResource( (File) resource[0]), (HttpHeaders) resource[1], HttpStatus.OK
+		    );
+		
+	}
+	@GetMapping(value = "/avatar/{username}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('USER')")
+	public ResponseEntity<?> getAvatarFile(@PathVariable(value = "username") String username,
+										HttpServletResponse response){
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		MyUserDetails user = ((MyUserDetails) auth.getPrincipal());
+		List <Content> friends = contentService.findByUsername(username).get().getFriend_ids();		
+		Boolean isFriend = false;
+		if(user.getUsername().equalsIgnoreCase(username)) {
+			isFriend = true;
+		}else {
+			isFriend = friends.stream()
+				.map(Content::getId)
+				.anyMatch(id -> id == user.getId());
+		}		
+		if(!isFriend ) return new ResponseEntity(new Message("u are not "+username+ " friend :("), HttpStatus.BAD_REQUEST);
+		
+		//LOGIC HERE
+		Object[] resource = storageService.loadAvatarAsResource(username);
 		return new ResponseEntity<FileSystemResource>(
 		        new FileSystemResource( (File) resource[0]), (HttpHeaders) resource[1], HttpStatus.OK
 		    );
@@ -196,6 +235,25 @@ public class MediaController {
 		return new ResponseEntity(frameDTO, HttpStatus.OK);
 		
 	}
+	@GetMapping(value = "/delete/frame/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('USER')")
+	public ResponseEntity<?> deleteFrame(@PathVariable(value = "id") Long frameId){
+		
+		//meh this should go out..
+		Frame frame = frameService.getById(frameId).get();
+		String username = frame.getContent().getUsername();
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		MyUserDetails user = ((MyUserDetails) auth.getPrincipal());
+		
+		//lel i wrote ==
+		if(!(username.equals(user.getUsername()))) return new ResponseEntity(new Message("u are not "+username+ " :("), HttpStatus.BAD_REQUEST);
+		
+		//LOGIC HERE		
+		return new ResponseEntity(frameService.deleteFrame(frame), HttpStatus.OK);
+		
+	}
+	
 	
 	
 }
