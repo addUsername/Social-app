@@ -5,13 +5,9 @@ const ENDPOINT_PATH = "http://localhost:8080/api/auth/";
 export default {
   register(user) {
     //const user = { name, username, email, password };
-    console.log("hi from register service");
-    console.log(user);
     return axios
       .post(ENDPOINT_PATH + "new", user)
       .then(response => {
-        console.log(response.data);
-        console.log(response.status);
         return response;
       })
       .catch(error => {
@@ -20,8 +16,6 @@ export default {
   },
   login(user) {
     //const user = { username, password };
-    console.log("login from userService");
-    console.log(user);
     return axios
       .post(ENDPOINT_PATH + "login", user)
       .then(response => {
@@ -29,8 +23,6 @@ export default {
           username: response.data.username,
           token: response.data.token
         };
-        console.log(user);
-        console.log("return user");
         return user;
       })
       .catch(error => {

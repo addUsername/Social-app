@@ -15,7 +15,7 @@
         <v-list-item class="px-2">
           <v-list-item-avatar>
             <v-img
-              src="https://randomuser.me/api/portraits/women/85.jpg"
+              v-bind:src="avatar"
             ></v-img>
           </v-list-item-avatar>
         </v-list-item>
@@ -97,6 +97,7 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
   data() {
     return {
@@ -110,7 +111,10 @@ export default {
   computed: {
     getLinkHome() {
       return "/home/" + this.$store.getters["auth/user"].username;
-    }
+    },
+    ...mapGetters({
+      avatar: "content/avatarBlob"
+    })
   },
   methods: {
     logout() {

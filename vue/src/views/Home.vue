@@ -120,7 +120,6 @@ export default {
         });
     },
     init() {
-      console.log("init home!!!!");
       //Cogemos el username del path api/home/{username}
       this.$store
         .dispatch("content/getUserFrontPage", this.$route.params.username)
@@ -128,8 +127,14 @@ export default {
           this.$store.dispatch("content/getBigImg").then(img => {
             this.bigImgUrl = img;
           });
-          this.$store.dispatch("content/getThumbnails");
-          this.$store.dispatch("content/getAvatar", this.$store.getters["auth/user"].username);
+          this.$store.dispatch(
+            "content/getThumbnails",
+            this.$route.params.username
+          );
+          this.$store.dispatch(
+            "content/getAvatar",
+            this.$store.getters["auth/user"].username
+          );
         });
     }
   },

@@ -14,8 +14,6 @@ const ENDPOINT_PATH = "http://localhost:8080/api/media/";
 export default {
   getUserFrontPage(username) {
     const user = { username: username };
-    console.log("getuserfrontpage");
-    console.log(store.getters["auth/user"].token);
     return axios
       .get(ENDPOINT_PATH + "home/" + user.username, {
         headers: {
@@ -30,7 +28,7 @@ export default {
     //this.$router.push("/");
   },
   getBigImg(imgID, username, type) {
-    console.log("making request get");
+    //this is not needed
     console.log(type);
     return axios.get(ENDPOINT_PATH + "home/big/" + imgID + "/" + username, {
       responseType: "blob",
@@ -41,7 +39,6 @@ export default {
     });
   },
   getThumbImg(imgID, username) {
-    console.log("making request get");
     return axios.get(ENDPOINT_PATH + "home/" + imgID + "/" + username, {
       responseType: "blob",
       //mirar aqui, tenemos que pasarle el type video o png
@@ -52,7 +49,6 @@ export default {
     });
   },
   getAvatar(username) {
-    console.log("making request get");
     return axios.get(ENDPOINT_PATH + "avatar/" + username, {
       responseType: "blob",
       //mirar aqui, tenemos que pasarle el type video o png
@@ -63,7 +59,6 @@ export default {
     });
   },
   getFrame(obj) {
-    console.log("getting frame");
     return axios.get(
       ENDPOINT_PATH + "frame/" + obj.frameId + "/" + obj.username,
       {

@@ -128,8 +128,6 @@ const content = {
         });
     },
     getFrameBlob({ commit, state }) {
-      console.log("Get frame blob");
-      console.log("ISFRAMELOADED FALSE!!!!!!!!!!!!!!!");
       commit("SAVE_CURRENTBLOB", null);
       commit("SAVE_ISFRAMELOADED", false);
       return contentService
@@ -143,28 +141,25 @@ const content = {
             new Blob([response.data], { type: state.frame.mediaType })
           );
           commit("SAVE_CURRENTBLOB", url);
-          console.log("ISFRAMELOADED TRUEEE!!!!!!!!!!!!!!!");
           commit("SAVE_ISFRAMELOADED", true);
           return;
         });
     },
-    getThumbnails({ commit, state }) {
+    getThumbnails({ commit, state }, username) {
       commit("SAVE_ISTHUMBNAILLOADED", false);
       state.home.imgs.forEach((thumbnail, i) => {
-        contentService
-          .getThumbImg(thumbnail, state.home.username)
-          .then(response => {
-            var url = URL.createObjectURL(new Blob([response.data]));
-            commit("SAVE_THUMBFRAME", {
-              key: state.home.frames[i],
-              value: url,
-              like: state.home.likes[i]
-            });
-            //Esto es muy cutre pero es la forma mas sencilla
-            if (state.thumbFrame.length == state.home.imgs.length) {
-              commit("SAVE_ISTHUMBNAILLOADED", true);
-            }
+        contentService.getThumbImg(thumbnail, username).then(response => {
+          var url = URL.createObjectURL(new Blob([response.data]));
+          commit("SAVE_THUMBFRAME", {
+            key: state.home.frames[i],
+            value: url,
+            like: state.home.likes[i]
           });
+          //Esto es muy cutre pero es la forma mas sencilla
+          if (state.thumbFrame.length == state.home.imgs.length) {
+            commit("SAVE_ISTHUMBNAILLOADED", true);
+          }
+        });
       });
       //ListFrames no cargara hasta que esto no termine.. cuanto antes lo pongamos a true mas rapido carga (aunq incompleto)
       return;
@@ -209,6 +204,13 @@ const content = {
         );
         commit("SAVE_ISCONTENTWORKING", false);
         return;
+      });
+    },
+    deleteFrame({commit},frameId){
+      commit("SAVE_ISCONTENTWORKING", true);
+      return contentService.deleteFrame(frameId).then(response => {
+        commit("SAVE_ISCONTENTWORKING", false);
+        return response;
       });
     }
   }

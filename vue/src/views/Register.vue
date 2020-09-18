@@ -99,9 +99,7 @@ export default {
         email: this.email
       };
       this.$store.dispatch("auth/register", user).then(hasAccount => {
-        //console.log(this.$store.getters.hasAccount);
         if (hasAccount) {
-          console.log("has account!!");
           this.$router.push("login");
         }
       });

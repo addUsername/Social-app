@@ -64,11 +64,9 @@ export default {
   },
   methods: {
     addFile(e) {
-      console.log("addfile");
       let droppedFiles = e.dataTransfer.files;
       if (!droppedFiles) return;
       this.file = droppedFiles[0];
-      console.log(this.file.toString);
     },
     removeFile() {
       this.file = "";
@@ -94,7 +92,6 @@ export default {
           frameId: -1
         }
       };
-      console.log(myObj);
       this.$store.dispatch("content/uploadFrame", myObj).then(response => {
         this.message = response;
         this.snackBar = true;

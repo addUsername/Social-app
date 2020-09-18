@@ -7,6 +7,7 @@ const content = {
   },
   mutations: {
     SAVE_ISSOCIALWORKING(state, boolean) {
+      console.log("SAVE_ISSOCIALWORKING");
       state.isSocialWorking = boolean;
     }
   },
@@ -15,7 +16,6 @@ const content = {
   },
   actions: {
     like({ commit }, likeDTO) {
-      console.log(likeDTO);
       commit("SAVE_ISSOCIALWORKING", true);
       return socialService.like(likeDTO).then(response => {
         commit("SAVE_ISSOCIALWORKING", false);
@@ -23,7 +23,6 @@ const content = {
       });
     },
     follow({ commit }, username) {
-      console.log(username);
       commit("SAVE_ISSOCIALWORKING", true);
       return socialService.follow(username).then(response => {
         commit("SAVE_ISSOCIALWORKING", false);

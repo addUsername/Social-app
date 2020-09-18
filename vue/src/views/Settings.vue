@@ -169,34 +169,91 @@
             <v-card flat class="col-6">
               <v-card-title>My media</v-card-title>
               <v-card-text>
-                <v-card-subtitle> Here should be the same </v-card-subtitle>
-                <v-sheet class="mx-auto" elevation="flat" max-width="800">
-                  <v-slide-group v-model="model" center-active show-arrows>
+                <v-card-subtitle> Select a post to edit </v-card-subtitle>
+                <v-sheet
+                  class="ma0-auto"
+                  elevation="flat"
+                  width="100%"
+                  max-width="800"
+                >
+                  <v-slide-group center-active show-arrows>
                     <v-slide-item
-                      v-for="n in 15"
-                      :key="n"
+                      v-for="pair in getData"
+                      :key="pair.key"
                       v-slot:default="{ active, toggle }"
                     >
                       <v-card
+                        v-on:click="callIDSelected(pair.key)"
                         :color="active ? 'primary' : 'grey lighten-1'"
                         class="ma-2"
-                        height="200"
-                        width="100"
+                        height="230"
+                        width="200"
                         @click="toggle"
                       >
                         <v-card align="center" justify="center">
-                          <h3>imagen</h3>
-                          <br />
-                          <br />
-                          <br />
-                          <br />
-                          <v-text> something</v-text>
+                          <v-img
+                            class="white--text align-end"
+                            v-bind:src="pair.value"
+                            align="right"
+                            max-width="200"
+                          >
+                            <v-chip class="ma-2" color="pink" outlined>
+                              <v-icon dark>mdi-heart</v-icon>
+                              {{ pair["like"] }}
+                            </v-chip>
+                          </v-img>
                         </v-card>
                       </v-card>
                     </v-slide-item>
                   </v-slide-group>
+                  <v-card-title>Delete post</v-card-title>
+                  <v-checkbox v-model="checkboxDeleteFrame">
+                    <template v-slot:label>
+                      (This procces is irreversible, visibles changes takes
+                      time)
+                    </template>
+                  </v-checkbox>
                 </v-sheet>
+                <v-card-title>Edit post</v-card-title>
+                <v-tooltip color="primary" top>
+                  <template v-slot:activator="{ on }">
+                    <v-text-field
+                      label="Set new description"
+                      prepend-icon="mdi-text"
+                      :rules="['Required']"
+                      v-model="textFrame"
+                      v-on="on"
+                    ></v-text-field> </template
+                  >Sometimes you don’t have to use many words to get your point
+                  across</v-tooltip
+                >
+                <v-file-input
+                  accept="image/jpeg"
+                  placeholder="Home"
+                  prepend-icon="mdi-camera"
+                  v-model="fileFrame"
+                ></v-file-input>
               </v-card-text>
+              <v-card-actions>
+                <v-col lg="7" sm="12">
+                  <v-card-subtitle>
+                    <p>
+                      Please type: "I want to commit these changes"
+                    </p></v-card-subtitle
+                  >
+                  <v-text-field
+                    label="Type here"
+                    prepend-icon="mdi-lock"
+                    :rules="['Required']"
+                    v-model="confirm"
+                  ></v-text-field>
+                </v-col>
+                <v-col lg="7" sm="12">
+                  <v-btn color="primary" @click.prevent="submitFrame"
+                    >Update</v-btn
+                  ></v-col
+                >
+              </v-card-actions>
             </v-card>
           </v-row>
         </v-tab-item>
@@ -222,16 +279,62 @@ export default {
       fileAvatar: "",
       textHome: "",
       message: "",
-      snackBar: false
+      snackBar: false,
+      cardSelected: "",
+      textFrame: "",
+      fileFrame: "",
+      checkboxDeleteFrame: ""
     };
   },
   computed: {
     ...mapGetters({
       user: "auth/user",
       isFrameLoaded: "content/isFrameLoaded"
-    })
+    }),
+    getData() {
+      return this.$store.getters["content/thumbFrame"];
+    }
   },
   methods: {
+    callIDSelected(key) {
+      this.cardSelected = key;
+    },
+    submitFrame() {
+      alert(this.cardSelected)
+      if (this.confirm !== "I want to commit these changes") {
+        return this.showMessage(
+          "Please write the sentence correctly to validate your actions"
+        );
+      }
+      if (this.checkboxDeleteFrame) {
+        if(this.cardSelected == ""){
+          return this.showMessage("OMG dude.. pick a Post!");
+        }
+        this.$store
+          .dispatch("content/deleteFrame", this.cardSelected)
+          .then(response => {
+            return this.showMessage(response);
+          });
+      }
+      if (this.textFrame == "" || this.fileFrame == "") {
+        return this.showMessage("Please fill the gaps");
+      }
+      const myObj = {
+        file: this.fileFrame,
+        media: {
+          username: this.$store.getters["auth/user"].username,
+          text: this.textFrame,
+          docType: this.fileFrame.type,
+          isHome: false,
+          frameId: this.cardSelected
+        }
+      };
+      this.$store.dispatch("content/uploadFrame", myObj).then(response => {
+        this.file = "";
+        this.input = "";
+        return this.showMessage(response);
+      });
+    },
     submitSecurity() {
       if (this.confirm !== "I want to commit these changes") {
         return this.showMessage(
@@ -258,12 +361,9 @@ export default {
         newPassword: this.newPassword,
         newEmail: this.newEmail
       };
-      console.log(updateClientDTO);
       this.$store
         .dispatch("social/updateClient", updateClientDTO)
         .then(response => {
-          this.message = response;
-          this.snackBar = true;
           if (this.checkboxDelete || this.newPassword !== "") {
             this.$router.push("/login");
           }
@@ -272,6 +372,7 @@ export default {
             (this.checkboxSuspend = false),
             (this.newPassword = "");
           this.newEmail = "";
+          return this.showMessage(response);
         });
     },
     submitHome() {
@@ -287,7 +388,6 @@ export default {
           );
         } else {
           //update home here
-          console.log("ELSEEEEEE");
           const myObj = {
             file: this.fileHome,
             media: {
@@ -298,7 +398,7 @@ export default {
               frameId: this.$store.getters["content/home"].bigImg
             }
           };
-          console.log(myObj);
+          //upload frame
           this.$store.dispatch("content/uploadFrame", myObj).then(response => {
             this.fileHome = "";
             this.textHome = "";
@@ -306,16 +406,14 @@ export default {
           });
         }
       }
-
       const obj = {
         username: this.user.username,
         file: this.fileAvatar
       };
+      //upload avatar
       this.$store.dispatch("content/uploadAvatar", obj).then(response => {
-        this.message = response;
-        this.snackBar = true;
         this.fileAvatar = "";
-        //aqui deberia borrar el state xd y hacer una funcion a parte..xd
+        return this.showMessage(response);
       });
     },
     showMessage(message) {
@@ -326,5 +424,4 @@ export default {
   }
 };
 </script>
-
 <style></style>

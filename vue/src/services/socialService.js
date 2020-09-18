@@ -5,8 +5,6 @@ const ENDPOINT_PATH = "http://localhost:8080/api/social/";
 
 export default {
   like(likeDTO) {
-    console.log("making like");
-    console.log(likeDTO);
     return axios
       .post(ENDPOINT_PATH + "like", likeDTO, {
         headers: {
@@ -42,7 +40,6 @@ export default {
         }
       })
       .then(response => {
-        console.log(response.data);
         return response.data.message;
       });
   },
@@ -54,7 +51,6 @@ export default {
         }
       })
       .then(response => {
-        console.log(response.data);
         return response.data.message;
       });
   }
