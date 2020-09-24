@@ -1,0 +1,1407 @@
+{
+	"info": {
+		"_postman_id": "762f5064-31b7-413e-9f91-1b196804cb3d",
+		"name": "newsocial",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "loginOK",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e0a08f4b-bb53-4231-916f-39389fac7e23",
+								"exec": [
+									"pm.test(\"login test\", () => {\r",
+									"  const responseJson = pm.response.json();\r",
+									"  pm.expect(responseJson.username).to.eql(pm.environment.get(\"username\"));\r",
+									"});\r",
+									"pm.test(\"Status code is 200\", () => {\r",
+									"  pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"has token\", ()=> {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson).to.have.property(\"token\");\r",
+									"});\r",
+									"pm.test(\"has user role\", ()=> {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson.authorities[0].authority).to.eql(\"ROLE_USER\")\r",
+									"});\r",
+									"//set variables\r",
+									"pm.environment.set(\"token\", pm.response.json().token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"{{username}}\",\r\n    \"password\": \"{{password}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url_base}}auth/login",
+							"host": [
+								"{{url_base}}auth"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "loginWrong",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "805cf9ae-bff3-49c4-aa98-8922f17ea990",
+								"exec": [
+									"pm.test(\"Status code is 401\", () => {\r",
+									"  pm.response.to.have.status(401);\r",
+									"});\r",
+									"pm.test(\"has trace\", ()=> {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson).to.have.property(\"trace\");\r",
+									"});\r",
+									"pm.test(\"has message\", ()=> {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson.message).to.eql(\"Wrong Username/Passsword\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"myJackson\",\r\n    \"password\": \"wrongusername\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Sign_inOK",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "bc8eba39-b1d2-469a-b02b-38d98e984a23",
+								"exec": [
+									"pm.test(\"Status code is 201\", () => {\r",
+									"  pm.response.to.have.status(201);\r",
+									"});\r",
+									"pm.test(\"has message\", ()=> {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson.message).to.eql(\"usuario guardado\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"WhateverName\",\r\n    \"username\": \"{{username}}\",\r\n    \"email\": \"{{username}}@gmail.com\",\r\n    \"password\": \"{{password}}\",\r\n    \"roles\":[\"user\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url_base}}auth/new",
+							"host": [
+								"{{url_base}}auth"
+							],
+							"path": [
+								"new"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "logout",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Content",
+			"item": [
+				{
+					"name": "Friendship",
+					"item": [
+						{
+							"name": "follow_twice",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "c9bc3910-db20-4aae-98c6-97bfebd0bc19",
+										"exec": [
+											"pm.test(\"Status code is 400\", () => {\r",
+											"  pm.response.to.have.status(400);\r",
+											"});\r",
+											"pm.test(\"has message\", ()=> {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson.message).to.eql(\"Duplicate entry\");\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "",
+										"value": "",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{{userToFollow}}",
+									"options": {
+										"raw": {
+											"language": "text"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url_base}}social/follow",
+									"host": [
+										"{{url_base}}social"
+									],
+									"path": [
+										"follow"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "follow",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "1a8f064d-bf58-45b8-92c0-c4008e266e99",
+										"exec": [
+											"pm.test(\"mssg test\", () => {\r",
+											"  const responseJson = pm.response.json();\r",
+											"  pm.expect(responseJson.message).to.eql(\"Request send\");\r",
+											"});\r",
+											"pm.test(\"Status code is 202\", () => {\r",
+											"  pm.response.to.have.status(202);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "",
+										"type": "text",
+										"value": ""
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{{userToFollow}}",
+									"options": {
+										"raw": {
+											"language": "text"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url_base}}social/follow",
+									"host": [
+										"{{url_base}}social"
+									],
+									"path": [
+										"follow"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "request_accept",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "cfc0590e-f4e1-40b5-93f4-67172b1a41c1",
+										"exec": [
+											"\r",
+											"pm.test(\"mssg test\", () => {\r",
+											"  const responseJson = pm.response.json();\r",
+											"  pm.expect(responseJson.message).to.eql(\"Add friend\");\r",
+											"});\r",
+											"pm.test(\"Status code is 202\", () => {\r",
+											"  pm.response.to.have.status(202);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "2"
+								},
+								"url": {
+									"raw": "{{url_base}}social/addFriend",
+									"host": [
+										"{{url_base}}social"
+									],
+									"path": [
+										"addFriend"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "files",
+					"item": [
+						{
+							"name": "upload",
+							"item": [
+								{
+									"name": "upload_new",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"id": "dbb1bbb0-29a6-4dfb-811a-51997fb9d221",
+												"exec": [
+													"pm.test(\"Status code is 200\", () => {\r",
+													"  pm.response.to.have.status(200);\r",
+													"});\r",
+													"pm.test(\"has message\", ()=> {\r",
+													"    const responseJson = pm.response.json();\r",
+													"    pm.expect(responseJson.message).to.eql(\"Post uploaded\");\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "file",
+													"contentType": "multipart/form-data",
+													"type": "file",
+													"src": "/C:/Users/SERGI/Downloads/photo5962936481720939566.jpg"
+												},
+												{
+													"key": "media",
+													"value": "{\n    \"username\": \"{{username}}\",\n    \"text\": \"holiiis esto se leee?? mas mas mas ma sm amsmmsmsm\",\n    \"docType\":\"image/jpg\",\n    \"isHome\":\"false\",\n    \"frameId\":\"-1\"\n}",
+													"contentType": "application/json",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{url_base}}media/upload",
+											"host": [
+												"{{url_base}}media"
+											],
+											"path": [
+												"upload"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "upload_check_username",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"id": "16d8f83d-d9f7-4ed7-a922-be822c090327",
+												"exec": [
+													"pm.test(\"Status code is 400\", () => {\r",
+													"  pm.response.to.have.status(201); //probar que aqui van (400)\r",
+													"});\r",
+													"pm.test(\"has message\", ()=> {\r",
+													"    const responseJson = pm.response.json();\r",
+													"    pm.expect(responseJson.message).to.eql(\"u are not anotherUser\");\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJteVRlc3QiLCJpYXQiOjE1OTgzNzAwOTEsImV4cCI6MTU5ODQwNjA5MX0.a8h3tHil1ArNhB1YL_umjphgKUDs3vsvjY7kJtcV9pMvEa-Hl_xxB3ktezO5Jv_Chy1c36Ou0OneO_dB1wzqfw",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "file",
+													"contentType": "multipart/form-data",
+													"type": "file",
+													"src": "/C:/Users/SERGI/OneDrive/Escritorio/hola.jpg"
+												},
+												{
+													"key": "media",
+													"value": "{\n    \"username\": \"anotherUser\",\n    \"text\": \"Este es mi comentario que nadie leera\",\n    \"docType\":\".jpg\",\n    \"frameId\":\"myframid\"\n}",
+													"contentType": "application/json",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost:8080/api/media/upload",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"api",
+												"media",
+												"upload"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "upload_update",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"id": "e875fd72-4bcd-4b62-8db2-6a314d473da4",
+												"exec": [
+													"pm.test(\"Status code is 201\", () => {\r",
+													"  pm.response.to.have.status(201);\r",
+													"});\r",
+													"pm.test(\"has message\", ()=> {\r",
+													"    const responseJson = pm.response.json();\r",
+													"    pm.expect(responseJson.message).to.eql(\"Update frame\");\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "f817cb20-765a-4e37-9abd-e6ea6eb64abd",
+												"exec": [
+													"if (pm.environment.get(\"idFrame\") == \"\"){\r",
+													"    console.log(\"#####################\\nNO IDFRAME SETED BY HOME REQUEST\");\r",
+													"}"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJteVRlc3QiLCJpYXQiOjE1OTgzNzAwOTEsImV4cCI6MTU5ODQwNjA5MX0.a8h3tHil1ArNhB1YL_umjphgKUDs3vsvjY7kJtcV9pMvEa-Hl_xxB3ktezO5Jv_Chy1c36Ou0OneO_dB1wzqfw",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "file",
+													"contentType": "multipart/form-data",
+													"type": "file",
+													"src": "/C:/Users/SERGI/OneDrive/Escritorio/descarga1.jpg"
+												},
+												{
+													"key": "media",
+													"value": "{\n    \"username\": \"{{username}}\",\n    \"text\": \"Este es mi comentario que nadie leera\",\n    \"docType\":\".jpg\",\n    \"frameId\":\"{{idFrame}}\"\n}",
+													"contentType": "application/json",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost:8080/api/media/upload",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"api",
+												"media",
+												"upload"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "upload_avatar",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"id": "30f8c3b7-e49b-4d5f-a9dd-3ee4872c2722",
+												"exec": [
+													"pm.test(\"Status code is 200\", () => {\r",
+													"  pm.response.to.have.status(200);\r",
+													"});\r",
+													"pm.test(\"has message\", ()=> {\r",
+													"    const responseJson = pm.response.json();\r",
+													"    pm.expect(responseJson.message).to.eql(\"Avatar updated\");\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "file",
+													"type": "file",
+													"src": "/C:/Users/SERGI/OneDrive/Escritorio/923e55b5-a638-4191-95af-c850a4f8fecc.jpg"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{url_base}}media/upload/avatar/{{username}}",
+											"host": [
+												"{{url_base}}media"
+											],
+											"path": [
+												"upload",
+												"avatar",
+												"{{username}}"
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"protocolProfileBehavior": {},
+							"_postman_isSubFolder": true
+						},
+						{
+							"name": "download",
+							"item": [
+								{
+									"name": "home",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"id": "bc4e2cbf-c431-4a16-9c63-8218d4dd6f1a",
+												"exec": [
+													"pm.test(\"home test\", () => {\r",
+													"  const responseJson = pm.response.json();\r",
+													"  pm.expect(responseJson.username).to.eql(pm.environment.get(\"username\"));\r",
+													"});\r",
+													"pm.test(\"Status code is 200\", () => {\r",
+													"  pm.response.to.have.status(200);\r",
+													"});\r",
+													"pm.test(\"has imgs\", ()=> {\r",
+													"    const responseJson = pm.response.json();\r",
+													"    pm.expect(responseJson).to.have.property(\"imgs\");\r",
+													"});\r",
+													"pm.test(\"has likes\", ()=> {\r",
+													"    const responseJson = pm.response.json();\r",
+													"    pm.expect(responseJson).to.have.property(\"likes\");\r",
+													"});\r",
+													"pm.test(\"has idFrame\", ()=> {\r",
+													"    const responseJson = pm.response.json();\r",
+													"    pm.expect(responseJson).to.have.property(\"idFrame\");\r",
+													"});\r",
+													"//set variables, now wevould run upload update// FLOW: upload_new -> get home (set idFrame) -> upload_update\r",
+													"pm.environment.set(\"idFrame\", pm.response.json().idFrame);\r",
+													"pm.environment.set(\"imgs\", pm.response.json().imgs[0]);"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{url_base}}media/home/{{username}}",
+											"host": [
+												"{{url_base}}media"
+											],
+											"path": [
+												"home",
+												"{{username}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Thumbnail_img",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"id": "6f4c60fc-5384-458a-a30a-75ca15516776",
+												"exec": [
+													"\r",
+													"pm.test(\"Content-Type is present\", function () {\r",
+													"    pm.response.to.have.header(\"Content-Type\") ;\r",
+													"});\r",
+													"pm.test(\"Content-Length > 0\", function () {\r",
+													"    //wiii works\r",
+													"    pm.expect(parseInt(pm.response.headers.get(\"Content-Length\"))).to.be.greaterThan(1);\r",
+													"});\r",
+													"pm.test(\"Response time is less than 200ms\", function () {\r",
+													"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Status code is 200\", () => {\r",
+													"  pm.response.to.have.status(200);\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{url_base}}media/home/{{imgs}}/{{username}}",
+											"host": [
+												"{{url_base}}media"
+											],
+											"path": [
+												"home",
+												"{{imgs}}",
+												"{{username}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Big_img",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"id": "4a54aec9-dfdf-4039-a920-44daf727d841",
+												"exec": [
+													"\r",
+													"pm.test(\"Content-Type is present\", function () {\r",
+													"    pm.response.to.have.header(\"Content-Type\") ;\r",
+													"});\r",
+													"pm.test(\"Content-Length > 0\", function () {\r",
+													"    //wiii works\r",
+													"    pm.expect(parseInt(pm.response.headers.get(\"Content-Length\"))).to.be.greaterThan(1);\r",
+													"});\r",
+													"pm.test(\"Response time is less than 200ms\", function () {\r",
+													"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Status code is 200\", () => {\r",
+													"  pm.response.to.have.status(200);\r",
+													"});"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{url_base}}media/home/big/{{imgs}}/{{username}}",
+											"host": [
+												"{{url_base}}media"
+											],
+											"path": [
+												"home",
+												"big",
+												"{{imgs}}",
+												"{{username}}"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "download_avatar",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"id": "611a5e4f-981a-41e3-88ce-9852f577802a",
+												"exec": [
+													"pm.test(\"Status code is 200\", () => {\r",
+													"  pm.response.to.have.status(200);\r",
+													"});\r",
+													"pm.test(\"header == image/png\", ()=> {\r",
+													"    pm.response.to.have.header('Content-Type', 'image/png');\r",
+													"});\r",
+													"//olé\r",
+													"pm.test(\"size > 0\", ()=> {\r",
+													"    pm.expect(pm.response.headers.get('Content-Length') > 1);\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{token}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{url_base}}media/avatar/{{username}}",
+											"host": [
+												"{{url_base}}media"
+											],
+											"path": [
+												"avatar",
+												"{{username}}"
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"protocolProfileBehavior": {},
+							"_postman_isSubFolder": true
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Frame",
+					"item": [
+						{
+							"name": "frame",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "3246b4c5-4507-4577-82cb-0e7ad40ed42f",
+										"exec": [
+											"pm.test(\"Response time is less than 200ms\", function () {\r",
+											"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"has likes\", ()=> {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.have.property(\"likes\");\r",
+											"});\r",
+											"pm.test(\"has comments\", ()=> {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.have.property(\"comments\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Status code is 200\", () => {\r",
+											"  pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.environment.set(\"idMessage\", pm.response.json().comments[0].id);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url_base}}media/frame/{{idFrame}}/{{username}}",
+									"host": [
+										"{{url_base}}media"
+									],
+									"path": [
+										"frame",
+										"{{idFrame}}",
+										"{{username}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "message",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "312d2e50-130f-4d80-b6fb-25cf611ac84e",
+										"exec": [
+											"pm.test(\"Response time is less than 200ms\", function () {\r",
+											"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"has message\", ()=> {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.have.property(\"message\");\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Status code is 200\", () => {\r",
+											"  pm.response.to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"idFrame\":\"{{idFrame}}\",\r\n    \"text\": \"text message post\",\r\n    \"username\": \"{{username}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url_base}}social/{{username}}/addComment",
+									"host": [
+										"{{url_base}}social"
+									],
+									"path": [
+										"{{username}}",
+										"addComment"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "like_Media",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "f86e5717-3e20-454f-a55a-4ea098cbf53b",
+										"exec": [
+											"pm.test(\"Response time is less than 202ms\", function () {\r",
+											"    pm.expect(pm.response.responseTime).to.be.below(202);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Status code is 200\", () => {\r",
+											"  pm.response.to.have.status(200);\r",
+											"});\r",
+											"pm.test(\"has message\", ()=> {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.have.property(\"message\");\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"objectId\":\"{{imgs}}\",\r\n    \"type\":\"frame\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url_base}}social/like",
+									"host": [
+										"{{url_base}}social"
+									],
+									"path": [
+										"like"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "like_Mssg",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "a0456e55-7859-4a60-98af-01d39ba7e4f1",
+										"exec": [
+											"pm.test(\"Response time is less than 202ms\", function () {\r",
+											"    pm.expect(pm.response.responseTime).to.be.below(202);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Status code is 202\", () => {\r",
+											"  pm.response.to.have.status(202);\r",
+											"});\r",
+											"pm.test(\"has message\", ()=> {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.have.property(\"message\");\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"objectId\":\"{{idMessage}}\",\r\n    \"type\":\"menssage\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url_base}}social/like",
+									"host": [
+										"{{url_base}}social"
+									],
+									"path": [
+										"like"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "config",
+					"item": [
+						{
+							"name": "suspend_account",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "76c723a4-f984-47dd-90fd-9d08d3daab69",
+										"exec": [
+											"pm.test(\"Status code is 202\", () => {\r",
+											"  pm.response.to.have.status(202);\r",
+											"});\r",
+											"pm.test(\"has message\", ()=> {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.have.property(\"message\");\r",
+											"});\r",
+											"pm.test(\"is Account suspended\", ()=> {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson.message).to.eql(\"Account suspended\")\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n        \"username\": \"{{username}}\",\r\n        \"detelete\": false,\r\n        \"suspend\": true,\r\n        \"newPassword\": \"\",\r\n        \"newEmail\": \"\"\r\n      }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url_base}}social/update/credentials",
+									"host": [
+										"{{url_base}}social"
+									],
+									"path": [
+										"update",
+										"credentials"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "delete_account",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "a8355025-b183-46d6-8d43-51ef11dbe213",
+										"exec": [
+											"pm.test(\"Status code is 200\", () => {\r",
+											"  pm.response.to.have.status(202);\r",
+											"});\r",
+											"pm.test(\"has message\", ()=> {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.have.property(\"message\");\r",
+											"});\r",
+											"pm.test(\"is Account deleted\", ()=> {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson.message).to.eql(\"Account deleted\")\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{   \r\n    \"username\": \"{{username}}\",\r\n    \"delete\": true,\r\n    \"suspend\": false,\r\n    \"newPassword\": \"\",\r\n    \"newEmail\": \"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url_base}}social/update/credentials",
+									"host": [
+										"{{url_base}}social"
+									],
+									"path": [
+										"update",
+										"credentials"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update_email",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "a86f8a65-e6bc-48c4-a8f9-01a84c122446",
+										"exec": [
+											"pm.test(\"Status code is 202\", () => {\r",
+											"  pm.response.to.have.status(202);\r",
+											"});\r",
+											"pm.test(\"has message\", ()=> {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.have.property(\"message\");\r",
+											"});\r",
+											"pm.test(\"is Account updated\", ()=> {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson.message).to.eql(\"Account updated\")\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{   \r\n    \"username\": \"{{username}}\",\r\n    \"delete\": false,\r\n    \"suspend\": false,\r\n    \"newPassword\": \"\",\r\n    \"newEmail\": \"{{username}}34@gmail.com\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url_base}}social/update/credentials",
+									"host": [
+										"{{url_base}}social"
+									],
+									"path": [
+										"update",
+										"credentials"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update_password",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "d7550b67-f024-4944-a551-4671f85583b4",
+										"exec": [
+											"pm.test(\"Status code is 202\", () => {\r",
+											"  pm.response.to.have.status(202);\r",
+											"});\r",
+											"pm.test(\"has message\", ()=> {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.have.property(\"message\");\r",
+											"});\r",
+											"pm.test(\"is Account updated\", ()=> {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson.message).to.eql(\"Account updated\")\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{   \r\n    \"username\": \"{{username}}\",\r\n    \"delete\": false,\r\n    \"suspend\": false,\r\n    \"newPassword\": \"{{password}}2\",\r\n    \"newEmail\": \"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url_base}}social/update/credentials",
+									"host": [
+										"{{url_base}}social"
+									],
+									"path": [
+										"update",
+										"credentials"
+									]
+								},
+								"description": "Here we shuould request a loginOK with new password"
+							},
+							"response": []
+						},
+						{
+							"name": "del_frame",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "afd273b1-4113-4968-b914-573b7bae4552",
+										"exec": [
+											"pm.test(\"Status code is 200\", () => {\r",
+											"  pm.response.to.have.status(200);\r",
+											"});\r",
+											"pm.test(\"has message\", ()=> {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.have.property(\"message\");\r",
+											"});\r",
+											"pm.test(\"is frame deleted\", ()=> {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson.message).to.eql(\"frame deleted\");\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url_base}}media/delete/frame/{{idFrame}}",
+									"host": [
+										"{{url_base}}media"
+									],
+									"path": [
+										"delete",
+										"frame",
+										"{{idFrame}}"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
