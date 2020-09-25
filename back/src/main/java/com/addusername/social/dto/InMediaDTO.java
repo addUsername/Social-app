@@ -8,20 +8,18 @@ import lombok.Setter;
 public class InMediaDTO {
 
 	//este nos permitira hacer la busqueda en la DB del objeto Media sin saber su ID
-	//sera el frontend quien se encarge de generarlo *?^##!! el frame id.
-	//Estrategia -> Vue mirara si ha pichado en editar frame (getframeid) o en crear new frame (count frames + 1)
-	private String frameId;
 	private String docType;
 	private String username;
 	private String text;
+	private Boolean isHome;
+	private Long frameId;
 	
-	public InMediaDTO(String frameId, String docType, String username, String text) {
-		this.frameId = frameId;
+	public InMediaDTO(String docType, String username, String text, Boolean isHome, Long frameId) {
+		this.isHome = isHome;
 		this.docType = docType;
 		this.username = username;
 		this.text = text;
-	}
-	
-	
+		this.frameId = frameId;		
+	}	
 }
 

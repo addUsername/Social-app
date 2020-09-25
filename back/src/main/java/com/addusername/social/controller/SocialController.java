@@ -3,18 +3,14 @@ package com.addusername.social.controller;
 import java.util.List;
 //PLS REDUCE THIS v2
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,9 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.addusername.social.dto.CommentDTO;
-import com.addusername.social.dto.JwtDTO;
 import com.addusername.social.dto.LikeDTO;
-import com.addusername.social.dto.LoginClient;
 import com.addusername.social.dto.Message;
 import com.addusername.social.dto.UpdateClientDTO;
 //fuera
@@ -44,7 +38,7 @@ import com.addusername.social.service.ContentService;
 import com.addusername.social.service.FrameService;
 import com.addusername.social.service.StorageMediaService;
 
-//Ok, SocialController is in charge of follow, like, comments and maybe private messages
+//Ok, SocialController is in charge of follow, like, comments and maybe private messages.. and also settings (new controller¿?)
 @RestController
 @RequestMapping("api/social")
 public class SocialController {
@@ -161,4 +155,14 @@ public class SocialController {
 		
 		return new ResponseEntity(new Message(clientService.updateClient(newUser)), HttpStatus.ACCEPTED);
 	}
+	@GetMapping(value = "unreads", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('USER')")
+	public ResponseEntity<?> getUnreads(){
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		
+		
+		return new ResponseEntity(contentService.getUnreads(((MyUserDetails) auth.getPrincipal() ).getUsername()), HttpStatus.ACCEPTED);
+	}
+	
 }

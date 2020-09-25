@@ -40,6 +40,7 @@ import com.addusername.social.service.RolService;
 @RequestMapping("/api/auth")
 public class AuthController {
 	
+	//esto fuera de aqui lel
 	@Autowired
 	PasswordEncoder passwordEncoder;	
 	@Autowired

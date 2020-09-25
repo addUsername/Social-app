@@ -34,8 +34,8 @@ import com.addusername.social.repository.MediaRespository;
 
 @Service
 public class StorageMediaService {
-	//Create a Service class to store and download files on the server, and to store information in the database.
-	//we should pick up this from application.propetes
+	//Create a Service class to store and download files on the server, and to store information into the database.
+	//TO-DO we should pick up this from application.propetes
 	private String uploadLocation = "src/main/resources/static/media/upload";
 	private final int MiniImageHeight = 400;
 	private final int MiniImageWidth = 400;
@@ -80,7 +80,8 @@ public class StorageMediaService {
 		Frame frame = new Frame();
 		//Persistence, looks pretty ugly, refactor..
 		
-		//SOLVED!! Rules for Vue setting frameId (1 == home, -1 == new frame, [frame id readed from response] == get in (H)
+		//SOLVED!! Rules for Vue setting frameId (1 == home, -1 == new frame, [frame id read from response] == get in (H)
+		//Diff between post uploaded and update frame ¿?
 		if ( !mediarepo.existsById(mediaDTO.getFrameId())) {
 			toReturn = (mediaDTO.getIsHome())? "Home updated":"Post uploaded";
 			}else {			
@@ -97,7 +98,7 @@ public class StorageMediaService {
 				e.printStackTrace();
 			}
 		}
-		
+		//This should be mapped outside
 		media.setDocumentType(mediaDTO.getDocType());
 		media.setPath(saveLocation.toFile().getAbsolutePath());
 		media.setFilename(filename);

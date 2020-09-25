@@ -1,5 +1,7 @@
 package com.addusername.social.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -10,8 +12,11 @@ import org.springframework.stereotype.Service;
 
 import com.addusername.social.dto.Home;
 import com.addusername.social.entities.content.Content;
+import com.addusername.social.entities.content.FollowRequest;
 import com.addusername.social.entities.content.Frame;
+import com.addusername.social.entities.content.PrivateMessage;
 import com.addusername.social.repository.ContentRepository;
+import com.addusername.social.repository.FollowRepository;
 
 @Transactional
 @Service
@@ -22,6 +27,8 @@ public class ContentService {
 	ContentRepository repo;
 	@Autowired
 	StorageMediaService storage;
+	@Autowired
+	FollowRepository followRepo;
 	
 	
 	public Optional<Content> findById(Long id){
@@ -61,9 +68,24 @@ public class ContentService {
 		toReturn.setImgs(content.getFrames().stream()
 				.map(frame -> frame.getMedia().getId().toString())
 				.collect(Collectors.toList())
-				);
-		
+				);		
 		return toReturn;
+	}
+	public List<Object> getUnreads(String username) {
+		
+		System.out.println("getting unreeeads!!");
+		Content content = repo.findByUsername(username).get();
+		List<FollowRequest> pendientFollows = followRepo.findByContent(content).stream()
+				.filter(req -> !req.isAcepted())
+				.collect(Collectors.toList());
+		List<PrivateMessage> nonreadPM = content.getPms().stream()
+				.filter(pm -> pm.isUnread())
+				.collect(Collectors.toList());
+		List<Object> toReturn = new ArrayList<>();
+		toReturn.add(pendientFollows);
+		toReturn.add(nonreadPM);
+		return toReturn;
+		
 	}
 
 }

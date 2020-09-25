@@ -35,13 +35,13 @@ public class ClientService {
 	}
 	public void save(Client client) {
 		//aqui deberiamos guardar en otra tabla los usernames/emails, asi aunque se borre el user estos quedan invalidados..
-		// es facil
+		// es facil.. y hay que meter mierda del authcontroller aqui para quitar imports de alli.. para la proxima app me hago un mapper, lel.
 		repo.save(client);
 	}
 	//Needs implements suspend account, like deleting from db but store it in another entity
 	//to be able to recive.. cool idea. 
 	public String updateClient(UpdateClientDTO newUser) {
-		//Looks silly and un-debugable but im not refactoring these
+		//Looks silly and un-debugable but im not refactoring this
 		
 		if(newUser.getSuspend()) return "Account suspended";
 		
