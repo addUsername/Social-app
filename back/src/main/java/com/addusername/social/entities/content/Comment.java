@@ -30,4 +30,8 @@ public class Comment {
 	private int likes;
 	private String username;
 	
+	public void addLike() {
+		this.likes++;
+	}
+	
 }

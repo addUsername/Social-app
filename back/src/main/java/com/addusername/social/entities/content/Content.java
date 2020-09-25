@@ -34,11 +34,17 @@ public class Content {
 	@OneToMany
 	private List<FollowRequest> followRequests = new ArrayList<>();
 	
+	@OneToMany
+	private List<PrivateMessage> pms = new ArrayList<>();
+	
 	@ManyToMany
 	private List<Content> friend_ids = new ArrayList<>();
 	
 	@OneToMany(mappedBy = "content", fetch = FetchType.LAZY)
 	private List<Frame> frames = new ArrayList<Frame>();
+	
+	private String avatarPath;
+	//private String pathAvatar = Imagen por defecto
 
 	public Content(@NotNull String username, List<Content> friend_ids, List<Frame> frames,List<FollowRequest> followRequests) {
 		this.username = username;
@@ -50,6 +56,16 @@ public class Content {
 		this.username = username;
 		this.friend_ids = friend_ids;
 		this.frames = frames;
+	}
+	public Content(String username, List<FollowRequest> followRequests, List<PrivateMessage> pms,
+			List<Content> friend_ids, List<Frame> frames, String avatarPath) {
+		super();
+		this.username = username;
+		this.followRequests = followRequests;
+		this.pms = pms;
+		this.friend_ids = friend_ids;
+		this.frames = frames;
+		this.avatarPath = avatarPath;
 	}
 	
 }
